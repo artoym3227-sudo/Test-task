@@ -1,0 +1,48 @@
+// src/styles/_reset.scss
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 0px;
+}
+
+body {
+    height: 100%;
+    font-family: 'Raleway', -apple-system, sans-serif;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+    background: none;
+    outline: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}

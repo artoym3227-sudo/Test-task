@@ -1,0 +1,9 @@
+@use './variables' as *;
+
+@mixin header-nav-text {
+    font-family: $font-family-base;
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 1;
+    letter-spacing: normal;
+}
