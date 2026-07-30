@@ -1,9 +1,58 @@
 @use './variables' as *;
 
+@mixin respond-to($breakpoint) {
+    @if map-has-key($breakpoints, $breakpoint) {
+        @media (max-width: map-get($breakpoints, $breakpoint)) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "Брейкпоинт `#{$breakpoint}` не найден в карте $breakpoints.";
+    }
+}
+
 @mixin header-nav-text {
     font-family: $font-family-base;
-    font-weight: 500;
-    font-size: 1.3rem;
-    line-height: 1;
-    letter-spacing: normal;
+    @include font(1.3rem, 1, 500);
+}
+
+@mixin hover {
+    @media (hover: hover) {
+        &:hover {
+            @content;
+        }
+    }
+}
+
+@mixin font($size, $lh: null, $weight: null, $color: null) {
+    font-size: $size;
+
+    @if $lh {
+        line-height: $lh;
+    }
+
+    @if $weight {
+        font-weight: $weight;
+    }
+
+    @if $color {
+        color: $color;
+    }
+}
+
+@mixin focus-visible {
+    &:focus-visible {
+        outline: 0.1rem solid $color-dark;
+        outline-offset: 0.15rem;
+        @content;
+    }
+}
+
+@mixin button-primary-interactive {
+    @include hover {
+        background: rgba($color-primary, 0.7);
+    }
+
+    @include focus-visible;
 }

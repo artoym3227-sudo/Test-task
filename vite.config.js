@@ -10,5 +10,16 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `
+          @use "@/styles/variables" as *;
+          @use "@/styles/mixins" as *;
+        `,
+        api: 'modern-compiler'
+      }
+    }
   }
 })
