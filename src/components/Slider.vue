@@ -1,5 +1,6 @@
 <template>
   <section class="slider">
+    <!-- Десктоп -->
     <Swiper
       :modules="[Navigation, Pagination, Autoplay]"
       :navigation="{
@@ -20,7 +21,7 @@
         <div class="slider__slide">
           <img :src="slide.image" alt="" class="slider__bg" loading="lazy" />
           <div class="slider__gradient"></div>
-          <img :src="wavePattern" alt="" class="slider__pattern" />
+          <wavePattern alt="" class="slider__pattern" />
 
           <div class="slider__content">
             <h2 class="slider__title">
@@ -40,7 +41,7 @@
       class="slider__arrow slider__arrow--prev" 
       aria-label="Предыдущий слайд"
     >
-      <img :src="arrowPrev" class="slider__arrow-icon" alt=""/>
+      <arrowPrev class="slider__arrow-icon" alt=""/>
     </button>
     
     <button 
@@ -49,10 +50,43 @@
       class="slider__arrow slider__arrow--next" 
       aria-label="Следующий слайд"
     >
-      <img :src="arrowNext" class="slider__arrow-icon" alt=""/>
+      <arrowNext class="slider__arrow-icon" alt=""/>
     </button>
 
     <div v-if="slides.length > 1" class="slider__dots"></div>
+
+    <!-- Мобилка -->
+    <Swiper
+      :modules="[Pagination, Autoplay]"
+      :pagination="{
+        el: '.slider__dots-mobile',
+        clickable: true,
+        bulletClass: 'slider__dot',
+        bulletActiveClass: 'slider__dot--active'
+      }"
+      :autoplay="{ delay: 5000, disableOnInteraction: false }"
+      :loop="slidesMobile.length > 1"
+      class="slider__swiper--mobile"
+    >
+      <SwiperSlide v-for="(slide, index) in slidesMobile" :key="index">
+        <div class="slider__slide">
+          <img :src="slide.image" alt="" class="slider__bg" loading="lazy" />
+          <div class="slider__gradient"></div>
+
+          <div class="slider__content">
+            <h2 class="slider__title slider__title--mobile">
+              <span class="slider__title-text">{{ slide.titleNormal }}</span>
+              <span class="slider__title-line"></span>
+            </h2>
+            <p class="slider__text">{{ slide.text }}</p>
+            <p v-if="slide.subtext" class="slider__subtext">{{ slide.subtext }}</p>
+            <button type="button" class="slider__btn" @click="handleDetailsClick(slide)">Подробнее</button>
+          </div>
+        </div>
+      </SwiperSlide>
+    </Swiper>
+
+    <div v-if="slidesMobile.length > 1" class="slider__dots-mobile"></div>
   </section>
 </template>
 
@@ -84,6 +118,21 @@ const slides = [
   },
 ]
 
+const slidesMobile = [
+  {
+    image: engineImage,
+    titleNormal: 'Техстройконтракт',
+    text: 'строительно-дорожная техника и запчасти от ведущих мировых производителей',
+    subtext: 'Широкая линейка двигателей на спецтехники'
+  },
+  {
+    image: engineImage,
+    titleNormal: 'Техстройконтракт',
+    text: 'строительно-дорожная техника и запчасти от ведущих мировых производителей',
+    subtext: 'Широкая линейка двигателей на спецтехники'
+  },
+]
+
 const emit = defineEmits(['details-click'])
 
 const handleDetailsClick = (slide) => {
@@ -100,9 +149,27 @@ const handleDetailsClick = (slide) => {
   width: 100%;
   overflow: hidden;
 
+  @include respond-to('mobile') {
+    height: 34rem;
+  }
+  
   &__swiper {
     width: 100%;
     height: 51rem;
+
+    @include respond-to('mobile') {
+      display: none;
+    }
+  }
+
+  &__swiper--mobile {
+    display: none;
+    width: 100%;
+    height: 34rem;
+
+    @include respond-to('mobile') {
+      display: block;
+    }
   }
 
   &__slide {
@@ -110,17 +177,23 @@ const handleDetailsClick = (slide) => {
     position: relative;
     width: 100%;
     height: 100%;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     overflow: hidden;
   }
 
   &__bg {
     position: absolute;
-    width: 55%;
+    width: 68%;
     right: 0;
     height: 100%;
     object-fit: cover;
     z-index: 0;
+
+    @include respond-to('mobile') {
+      width: 100%;
+      height: 100%
+    }
   }
 
   &__gradient {
@@ -133,9 +206,18 @@ const handleDetailsClick = (slide) => {
       rgba($color-dark, 0) 100%
     );
     z-index: 0;
+
+    @include respond-to('mobile') {
+      background: linear-gradient(
+        180deg,
+        $color-dark 0%,
+        $color-dark 0%,
+        rgba($color-dark, 40%) 100%
+      );
+    }
   }
 
-  &__pattern {
+  &__pattern { 
     position: absolute;
     inset: 0;
     width: 100%;
@@ -148,32 +230,85 @@ const handleDetailsClick = (slide) => {
 
   &__content {
     position: relative;
-    z-index: 3;
+    margin-top: 12.7rem;
     margin-left: 13rem;
     max-width: 59rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     color: $color-white;
+    z-index: 3;
+
+    @include respond-to('mobile') {
+      margin-top: 6.1rem;
+      margin-left: 2rem;
+      margin-right: 4.5rem;
+      max-width: 100%;
+      padding-right: 5rem;
+      gap: 1.5rem;
+    }
   }
 
   &__title {
     display: flex;
     flex-direction: column;
     max-width: 100%;
+    margin-bottom: 2rem;
     @include font(4rem, 1.1, 800);
     text-transform: uppercase;
-    margin-bottom: 1rem;
+
+    @include respond-to('mobile') {
+      @include font(2.5rem, 1.1, 800, $color-white);
+    }
   }
 
   &__title-accent {
     color: $color-primary;
   }
 
+  &__title--mobile {
+    width: 31rem;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.3rem;
+  }
+
+  &__title-text {
+    white-space: nowrap;
+  }
+
+  &__title-line {
+    display: inline-block;
+    width: 3rem;
+    height: 0.4rem;
+    background: $color-primary;
+    border-radius: 0.2rem;
+    flex-shrink: 0;
+  }
+
   &__text {
     @include font(2.4rem, 1.1, 600, $color-gray);
     opacity: 0.85;
-    margin: 0 0 1.5rem;
+    margin-bottom: 3rem;
+
+    @include respond-to('mobile') {
+      @include font(1.6rem, 1.1, 500, $color-white);
+      width: 30.09rem;
+      margin: 0;
+    }
+  }
+
+  &__subtext {
+    display: none;
+
+    @include respond-to('mobile') {
+      display: block;
+      width: 19.9rem;
+      max-width: 100%;
+      @include font(1.3rem, 1.31, 500, $color-white);
+      margin: 0 0 1.6rem;
+    }
   }
 
   &__btn {
@@ -200,6 +335,10 @@ const handleDetailsClick = (slide) => {
     @include focus-visible {
       outline-color: $color-primary;
     }
+
+    @include respond-to('mobile') {
+      display:none;
+    }
   }
 
   &__arrow {
@@ -219,8 +358,19 @@ const handleDetailsClick = (slide) => {
     box-shadow: 0 0.1rem 0.5rem rgba($color-black, 0.15);
     transition: background 0.2s ease, opacity 0.2s ease;
 
+    @include hover {
+      color: $color-white;
+    }
+
+    @include respond-to('mobile') {
+      display: none;
+    }
+
     &--prev {
       left: 1rem;
+      @include hover {
+        color: $color-white;
+      }
     }
 
     &--next {
@@ -240,9 +390,9 @@ const handleDetailsClick = (slide) => {
   }
 
   &__arrow-icon {
-    width: 1.6rem;
-    height: 1.6rem;
-    pointer-events: none;
+    width: 3.2rem;
+    height: 3.2rem;
+    overflow: visible;
   }
 
   &__dots {
@@ -252,6 +402,23 @@ const handleDetailsClick = (slide) => {
     z-index: 4;
     display: flex;
     gap: 0.2rem;
+
+    @include respond-to('mobile') {
+      display: none;
+    }
+  }
+
+  &__dots-mobile {
+    display: none;
+    position: absolute;
+    left: 2.5rem;
+    bottom: 2.4rem;
+    z-index: 4;
+    gap: 0.2rem;
+
+    @include respond-to('mobile') {
+      display: flex;
+    }
   }
 
   :deep(.slider__dot) {

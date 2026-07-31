@@ -8,34 +8,37 @@
                     ref="prevRef"
                     :disabled="isBeginning"
                 >
-                    <img :src="arrowPrev" alt="">
+                    <arrowPrev class="news__nav-icn" alt=""/>
                 </button>
                 <button
                     class="news__nav-btn"
                     ref="nextRef"
                     :disabled="isEnd"
                 >
-                    <img :src="arrowNext" alt="">
+                    <arrowNext class="news__nav-icn" alt=""/>
                 </button>
             </div>
         </div>
 
         <Swiper
             :modules="[Navigation]"
-            :slides-per-view="4.2"
+            slides-per-view="auto"
             :space-between="24"
+            :slides-offset-before="20"
+            :slides-offset-after="20"
             :navigation="{
                 prevEl: prevRef,
                 nextEl: nextRef,
             }"
             :breakpoints="{
-                320: { slidesPerView: 1.2, spaceBetween: 12 },
-                768: { slidesPerView: 2.2, spaceBetween: 16 },
-                1024: { slidesPerView: 3.2, spaceBetween: 20 },
-                1440: { slidesPerView: 4.2, spaceBetween: 24 },
+                320: { spaceBetween: 12, slidesOffsetBefore: 20, slidesOffsetAfter: 20 },
+                768: { spaceBetween: 16, slidesOffsetBefore: 30, slidesOffsetAfter: 24 },
+                1024: { spaceBetween: 20, slidesOffsetBefore: 30, slidesOffsetAfter: 24 },
+                1440: { spaceBetween: 24, slidesOffsetBefore: 30, slidesOffsetAfter: 24 },
             }"
             @swiper="onSwiper"
             @slideChange="onSlideChange"
+            @reachEnd="onReachEnd"
             class="news__slider"
         >
             <SwiperSlide
@@ -89,6 +92,10 @@ const onSlideChange = (swiper) => {
     isEnd.value = swiper.isEnd
 }
 
+const onReachEnd = (swiper) => {
+    isEnd.value = true
+}
+
 const newsItems = [
     {
         title: '25-27 апреля с большим успехом прошла 21-я международная выставка машин и оборудования для добычи, обогащения и транспортировки полезных ископаемых.',
@@ -126,22 +133,39 @@ const newsItems = [
 
 <style lang="scss" scoped>
 .news {
-    margin-left: 3rem;
+    width: 100%;
+    overflow: hidden;
+
+    @include respond-to('mobile') {
+        margin-top: 4rem;
+    }
+
     &__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 4.2rem;
+        margin-left: 3rem;
+        margin-right: 3rem;
+
+        @include respond-to('mobile') {
+            margin-bottom: 2rem;
+            margin-left: 2rem;
+            margin-right: 2rem;
+        }
     }
 
     &__title {
         @include font(4rem, 1.1, 600, $color-dark);
+
+        @include respond-to('mobile') {
+            @include font(1.8rem, 1.1, 600, $color-dark);
+        }
     }
 
     &__nav {
         display: flex;
         gap: 1rem;
-        margin-right: 3rem;
     }
 
     &__nav-btn {
@@ -153,23 +177,60 @@ const newsItems = [
         border-radius: 0.6rem;
         background: $color-very-gray-light;
         border: none;
+        overflow: visible;
         cursor: pointer;
-
+        flex-shrink: 0;
+        @include hover {
+            color: rgba($color-primary, 1);
+        }
         &:disabled {
             opacity: 0.4;
             cursor: default;
         }
+
+        @include respond-to('mobile') {
+            width: 2.4rem;
+            height: 2.4rem;
+        }
+    }
+
+    &__nav-icn{
+        width: 3.2rem;
+        height: 3.2rem;
+        overflow: visible;
+
+        @include respond-to('mobile') {
+            width: 1.4rem;
+            height: 1.4rem;
+        }
+    }
+
+    &__slider {
+        width: 100%;
     }
 }
 
 .news-card {
-    height:39.8rem;
+    width: 37rem;
+    height: 39.8rem;
+    padding-top: 0.2rem;
     max-height: 100%;
-    margin-bottom:8rem;
+    margin-bottom: 8rem;
+    flex-shrink: 0;
+    
     @include hover {
             transform: translateY(-0.2rem);
             box-shadow: 0 0.4rem 1.2rem rgba($color-black, 0.1);
         }
+
+    @include respond-to('mobile') {
+        width: 29.5rem;
+        max-width: 29.5rem;
+        height: 32.4rem;
+        max-height: 32.4rem;
+        overflow: hidden;
+    }
+
     &__link {
         display: flex;
         flex-direction: column;
@@ -184,22 +245,32 @@ const newsItems = [
         object-fit: cover;
         border-radius: 1.2rem;
         margin-bottom: 2rem;
-       
+        flex-shrink: 0;
+
+        @include respond-to('mobile') {
+            height: 19rem;
+            margin-bottom: 1.2rem;
+        }
     }
 
     &__title {
-        width: 37rem; 
+        width: 100%;
         max-width: 100%;
         display: -webkit-box;
-        -webkit-box-orient: vertical;
         overflow: hidden;
         @include font(1.5rem, 1.4, 600, $color-dark);
+
+        @include respond-to('mobile') {
+            @include font(1.4rem, 1.35, 600, $color-dark);
+            -webkit-line-clamp: 3;
+        }
     }
 
     &__date {
         margin-top: auto;
         @include font(1.5rem, 1, 600, $color-dark);
         opacity: 0.3;
+        flex-shrink: 0;
     }
 }
 </style>

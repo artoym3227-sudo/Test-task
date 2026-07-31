@@ -2,27 +2,39 @@
     <div class="brands-info">
         <div class="brands-info__list">
             <h2 class="brands-info__title">Производители техники</h2>
-            <ul class="brands-info__brands">
-                <li v-for="(item, key) in brandsList" :key="key" class="brands-info__item">
-                    <router-link :to="item.path" class="brands-info__link">
-                        <img :src="item.image" :alt="item.title" class="brands-info__img" loading="lazy">
-                    </router-link>
-                </li>
-            </ul> 
+
+            <div class="brands-info__brands">
+                <div class="brands-info__track">
+                    <ul class="brands-info__brands-group">
+                        <li v-for="(item, key) in brandsList" :key="`a-${key}`" class="brands-info__item">
+                            <router-link :to="item.path" class="brands-info__link">
+                                <img :src="item.image" :alt="item.title" class="brands-info__img" loading="lazy">
+                            </router-link>
+                        </li>
+                    </ul>
+
+                    <ul class="brands-info__brands-group brands-info__brands-group--duplicate" aria-hidden="true">
+                        <li v-for="(item, key) in brandsList" :key="`b-${key}`" class="brands-info__item">
+                            <router-link :to="item.path" class="brands-info__link" tabindex="-1">
+                                <img :src="item.image" :alt="item.title" class="brands-info__img" loading="lazy">
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <div class="brands-info__offers">
             <router-link to="/parts" class="brands-info__offer brands-info__offer--parts">
                 <p class="brands-info__offer-text">Запасные части</p>
-                <img :src="gears" alt="" class="brands-info__offer-logo">
-                <img :src="arrowMoreDeatails" alt="" class="brands-info__offer-arrow">
-                
+                <gears alt="" class="brands-info__offer-logo"/>
+                <arrowMoreDeatails alt="" class="brands-info__offer-arrow"/>
             </router-link> 
 
             <router-link to="/machinery" class="brands-info__offer brands-info__offer--machinery">
                 <p class="brands-info__offer-text">Техника</p>
-                <img :src="machinery" alt="" class="brands-info__offer-logo">
-                <img :src="arrowMoreDeatails" alt="" class="brands-info__offer-arrow">
+                <machinery alt="" class="brands-info__offer-logo"/>
+                <arrowMoreDeatails alt="" class="brands-info__offer-arrow"/>
             </router-link>
         </div>
     </div>
@@ -40,6 +52,8 @@ import machinery from '@/assets/images/machinery.svg'
 import gears from '@/assets/images/gears.svg'
 import arrowMoreDeatails from '@/assets/images/arrow-more-details.svg'
 
+
+
 const brandsList = [
     { title: 'Hyundai', image: brandHyudai, path: '/brands/hyundai' },
     { title: 'Shantui', image: brandShantui, path: '/brands/shantui' },
@@ -53,20 +67,26 @@ const brandsList = [
 
 <style lang="scss" scoped>
 .brands-info {
-    margin: 2.4rem 3rem 4.1rem 3rem ; 
+
     &__list {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        margin-top: 2.4rem;
         margin-right: 6rem;
+        margin-left: 3rem;
         margin-bottom: 3rem;
         flex-shrink: 0;
-        
+
         @include respond-to('mobile') {
             flex-direction: column;
-            align-items: flex-start;
-            gap: 2rem;
+            align-items: center;
+            margin-top: 2.5rem;
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 2.5rem;
+            gap: 1rem;
         }
     }
 
@@ -75,28 +95,79 @@ const brandsList = [
         max-width: 100%;
         text-transform: uppercase;
         @include font(1.1rem, 1.2, 600, $color-gray-light);
-        white-space: wrap; 
+        white-space: wrap;
         pointer-events: none;
-        
-    }
-
-    &__brands {
-        display: flex;
-        width: 128rem;
-        max-width: 100%;
-        align-items: center;
-        justify-content: end;
-        flex-direction: row;
-        gap: 5rem;
         flex-shrink: 0;
-        flex-wrap: wrap;
-        
         @include respond-to('mobile') {
-            gap: 2rem;
+            width: 15.6rem;
+            max-width: 100%;
         }
     }
 
+    
+    &__brands {
+        max-width: 100%;
+
+        @include respond-to('mobile') {
+            width: 100%;
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(
+                to right,
+                transparent 0,
+                $color-black 3%,
+                $color-black 97%,
+                transparent 100%
+            );
+            mask-image: linear-gradient(
+                to right,
+                transparent 0,
+                $color-black 3%,
+                $color-black 97%,
+                transparent 100%
+            );
+        }
+    }
+
+
+    &__track {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+
+        @include respond-to('mobile') {
+            justify-content: flex-start;
+            width: max-content;
+            animation: brands-marquee 22s linear infinite;
+        }
+    }
+
+    &__brands-group {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 5rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: end;
+
+    @include respond-to('mobile') {
+        margin-left: 5rem;
+        gap: 1rem;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+    &--duplicate {
+        display: none;
+
+        @include respond-to('mobile') {
+            display: flex;
+        }
+    }
+}
+
     &__item {
+        
         flex-shrink: 0;
     }
 
@@ -104,7 +175,7 @@ const brandsList = [
         @include hover {
             opacity: 0.8;
         }
-        
+
         @include focus-visible;
     }
 
@@ -114,9 +185,13 @@ const brandsList = [
         flex-shrink: 0;
         object-fit: contain;
         transition: transform 0.2s ease;
-        
+
         @include hover {
             transform: scale(1.05);
+        }
+
+        @include respond-to('mobile') {
+            width: 11rem;
         }
     }
 
@@ -124,9 +199,11 @@ const brandsList = [
         display: flex;
         margin: 0 3rem;
         gap: 2rem;
-        
+
         @include respond-to('mobile') {
             flex-direction: column;
+            margin-left: 2rem;
+            margin-right: 2rem;
             gap: 1rem;
         }
     }
@@ -141,30 +218,30 @@ const brandsList = [
         text-decoration: none;
         color: inherit;
         box-sizing: border-box;
+        overflow: visible;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        
-        
+
         @include hover {
             transform: translateY(-0.2rem);
             box-shadow: 0 0.4rem 1.2rem rgba($color-black, 0.1);
+            color: rgba($color-primary, 0.7);
         }
-        
+
         @include focus-visible;
-        
+
         @include respond-to('mobile') {
             width: 100%;
+            padding: 2.5rem 2.5rem 2rem 2em;
         }
- 
+
         &--parts {
-            
             @include respond-to('mobile') {
                 margin-right: 0;
             }
         }
 
         &--machinery {
-
             @include respond-to('mobile') {
                 margin-left: 0;
             }
@@ -175,8 +252,12 @@ const brandsList = [
         align-self: flex-end;
         margin-right: auto;
         padding: 0;
+        z-index: 1;
+        @include font(2.4rem, 1, 600, $color-dark);
+        @include respond-to('mobile') {
+                @include font(1.6rem, 1, 500, $color-dark);
+            }
         
-        @include font(2.4rem, 1, 600);
     }
 
     &__offer-logo {
@@ -184,16 +265,44 @@ const brandsList = [
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        max-width: 80%;
-        max-height: 80%;
         object-fit: contain;
     }
 
+    
+
+    &__offer--parts &__offer-logo {
+        width: 14.9rem;
+        height: 10.9rem;
+        @include respond-to('mobile') {
+                width: 11.4rem;
+                height: 8.5rem;
+            }
+        
+    }
+
+    &__offer--machinery &__offer-logo {
+        width: 13.2rem;
+        height: 12rem;
+    }
+
     &__offer-arrow {
-        top: 3.1rem;
-        right: 3rem;
         width: 1.9rem;
         height: 1.9rem;
+        overflow: visible;
+        @include respond-to('mobile') {
+                width: 1.4rem;
+                height: 1.4rem;
+            }
+
+    }
+    }
+
+@keyframes brands-marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
     }
 }
 </style>
