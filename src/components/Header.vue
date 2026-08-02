@@ -59,7 +59,7 @@
                     <burgerIcon class="header__burger-icon" alt=""/>
                 </button>
 
-                <router-link to="/" class="header__mobile-logo">
+                <router-link to="#" class="header__mobile-logo">
                     <logoHeaderMobile alt="logo-of-company" class="header__mobile-logo-icon"/>
                 </router-link>
             </div>
@@ -90,7 +90,7 @@
                             <closeIcon class="mobile-menu__close-icon" />
                         </button>
 
-                        <router-link to="/" class="header__mobile-logo" @click="closeMobileMenu">
+                        <router-link to="#" class="header__mobile-logo" @click="closeMobileMenu">
                             <logoHeaderMobile alt="logo-of-company" class="header__mobile-logo-icon"/>
                         </router-link>
                     </div>

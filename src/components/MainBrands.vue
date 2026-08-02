@@ -25,13 +25,13 @@
         </div>
 
         <div class="brands-info__offers">
-            <router-link to="/parts" class="brands-info__offer brands-info__offer--parts">
+            <router-link to="#" class="brands-info__offer brands-info__offer--parts">
                 <p class="brands-info__offer-text">Запасные части</p>
                 <gears alt="" class="brands-info__offer-logo"/>
                 <arrowMoreDeatails alt="" class="brands-info__offer-arrow"/>
             </router-link> 
 
-            <router-link to="/machinery" class="brands-info__offer brands-info__offer--machinery">
+            <router-link to="#" class="brands-info__offer brands-info__offer--machinery">
                 <p class="brands-info__offer-text">Техника</p>
                 <machinery alt="" class="brands-info__offer-logo"/>
                 <arrowMoreDeatails alt="" class="brands-info__offer-arrow"/>
