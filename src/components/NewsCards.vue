@@ -262,7 +262,7 @@ const newsItems = [
 
         @include respond-to('mobile') {
             @include font(1.4rem, 1.35, 600, $color-dark);
-            -webkit-line-clamp: 3;
+
         }
     }
 

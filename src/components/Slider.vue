@@ -1,6 +1,5 @@
 <template>
   <section class="slider">
-    <!-- Десктоп -->
     <Swiper
       :modules="[Navigation, Pagination, Autoplay]"
       :navigation="{
@@ -55,7 +54,6 @@
 
     <div v-if="slides.length > 1" class="slider__dots"></div>
 
-    <!-- Мобилка -->
     <Swiper
       :modules="[Pagination, Autoplay]"
       :pagination="{
@@ -66,7 +64,7 @@
       }"
       :autoplay="{ delay: 5000, disableOnInteraction: false }"
       :loop="slidesMobile.length > 1"
-      class="slider__swiper--mobile"
+      class="slider__swiper-mobile"
     >
       <SwiperSlide v-for="(slide, index) in slidesMobile" :key="index">
         <div class="slider__slide">
@@ -162,7 +160,7 @@ const handleDetailsClick = (slide) => {
     }
   }
 
-  &__swiper--mobile {
+  &__swiper-mobile {
     display: none;
     width: 100%;
     height: 34rem;
@@ -230,8 +228,7 @@ const handleDetailsClick = (slide) => {
 
   &__content {
     position: relative;
-    margin-top: 12.7rem;
-    margin-left: 13rem;
+    margin: 12.7rem 0 0 13rem;
     max-width: 59rem;
     display: flex;
     flex-direction: column;
@@ -240,11 +237,9 @@ const handleDetailsClick = (slide) => {
     z-index: 3;
 
     @include respond-to('mobile') {
-      margin-top: 6.1rem;
-      margin-left: 2rem;
-      margin-right: 4.5rem;
+      margin: 6.1rem 4.5rem 0 2rem;
       max-width: 100%;
-      padding-right: 5rem;
+      padding: 0 5rem 0 0;
       gap: 1.5rem;
     }
   }
@@ -253,7 +248,7 @@ const handleDetailsClick = (slide) => {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    margin-bottom: 2rem;
+    margin: 0 0 2rem 0;
     @include font(4rem, 1.1, 800);
     text-transform: uppercase;
 
@@ -290,7 +285,7 @@ const handleDetailsClick = (slide) => {
   &__text {
     @include font(2.4rem, 1.1, 600, $color-gray);
     opacity: 0.85;
-    margin-bottom: 3rem;
+    margin: 0 0 3rem 0;
 
     @include respond-to('mobile') {
       @include font(1.6rem, 1.1, 500, $color-white);
@@ -307,7 +302,7 @@ const handleDetailsClick = (slide) => {
       width: 19.9rem;
       max-width: 100%;
       @include font(1.3rem, 1.31, 500, $color-white);
-      margin: 0 0 1.6rem;
+      margin: 0 0 1.6rem 0;
     }
   }
 

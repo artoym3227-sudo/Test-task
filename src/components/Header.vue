@@ -82,20 +82,97 @@
             </div>
         </div>
 
-        <nav class="header__mobile-nav" v-if="isMobileMenuOpen">
-            <ul class="header__mobile-nav-list">
-                <li v-for="(item, key) in navItems" :key="key" class="header__mobile-nav-item">
-                    <router-link :to="item.path" @click="isMobileMenuOpen = false" class="header__mobile-nav-link">
-                        {{ item.title }}
-                    </router-link>
-                </li>
-            </ul>
-        </nav>
+        <transition name="mobile-menu">
+            <div class="mobile-menu" v-if="isMobileMenuOpen">
+                <div class="header__mobile-bar mobile-menu__topbar">
+                    <div class="header__mobile-left">
+                        <button type="button" class="header__burger-btn" @click="closeMobileMenu" aria-label="Закрыть меню">
+                            <closeIcon class="mobile-menu__close-icon" />
+                        </button>
+
+                        <router-link to="/" class="header__mobile-logo" @click="closeMobileMenu">
+                            <logoHeaderMobile alt="logo-of-company" class="header__mobile-logo-icon"/>
+                        </router-link>
+                    </div>
+
+                    <div class="header__mobile-right">
+                        <button type="button" class="header__mobile-action-btn" @click="handleSearch" aria-label="Поиск">
+                            <searchIconMobile alt="" class="header__mobile-search-icon"/>
+                        </button>
+                        <button type="button" class="header__mobile-action-btn header__mobile-action-btn--bell" aria-label="Уведомления">
+                            <bellIcon alt="" class="header__mobile-bell-icon"/>
+                            <span v-if="hasNotifications" class="header__notification-dot"></span>
+                        </button>
+                        <button type="button" class="header__mobile-action-btn header__mobile-action-btn--cart" @click="handleBasketClick" aria-label="Корзина">
+                            <basketIconMobile alt="" class="header__mobile-basket-icon"/>
+                            <span v-if="cartCount" class="header__basket-count header__basket-count--mobile">{{ cartCount }}</span>
+                        </button>
+                        <button type="button" class="header__mobile-action-btn" @click="handleAuthClick" aria-label="Профиль">
+                            <userIcon alt="" class="header__mobile-user-icon"/>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mobile-menu__login">
+                    <p class="mobile-menu__login-text">Войти в личный кабинет</p>
+                    <button type="button" class="mobile-menu__login-btn" @click="handleAuthClick">Войти</button>
+                </div>
+
+                <div class="mobile-menu__tabs">
+                    <button
+                        type="button"
+                        class="mobile-menu__tab"
+                        :class="{ 'mobile-menu__tab--active': activeTab === 'catalog' }"
+                        @click="activeTab = 'catalog'"
+                    >
+                        <catalogIcon class="mobile-menu__tab-icon" alt=""/>
+                        Каталог
+                    </button>
+                    <button
+                        type="button"
+                        class="mobile-menu__tab"
+                        :class="{ 'mobile-menu__tab--active': activeTab === 'promo' }"
+                        @click="activeTab = 'promo'"
+                    >
+                        <promo class="mobile-menu__tab-icon" alt=""/>
+                        Акции
+                    </button>
+                </div>
+
+                <ul class="mobile-menu__list">
+                    <li v-for="(item, key) in mobileMenuItems" :key="key" class="mobile-menu__item">
+                        <router-link :to="item.path" @click="closeMobileMenu" class="mobile-menu__link">
+                            {{ item.title }}
+                            <arrowMoreInfo class="mobile-menu__chevron" />
+                        </router-link>
+                    </li>
+                </ul>
+
+                <div class="mobile-menu__footer">
+                    <div class="mobile-menu__footer-contacts">
+                        <a href="tel:+7-800-700-03-30" class="mobile-menu__footer-phone">8-800-700-03-30</a>
+                        <span class="mobile-menu__footer-note">Звонок бесплатный</span>
+                    </div>
+                    <div class="mobile-menu__footer-actions">
+                        <a href="tel:+7-800-700-03-30" class="mobile-menu__footer-action-btn" aria-label="Позвонить">
+                            <contactTelIcon/>
+                        </a>
+                        <a href="mailto:tsk@gmail.com" class="mobile-menu__footer-action-btn" aria-label="Написать письмо">
+                            <contactEmailIcon />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </transition>
+
+        <transition name="mobile-menu-backdrop">
+            <div v-if="isMobileMenuOpen" class="mobile-menu-backdrop" @click="closeMobileMenu"></div>
+        </transition>
     </header>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onBeforeUnmount } from 'vue'
 
 import burgerIcon from '@/assets/images/burger-icon.svg'
 import logoHeaderMobile from '@/assets/images/logo-header-mobile.svg'
@@ -103,6 +180,11 @@ import bellIcon from '@/assets/images/bell-icon.svg'
 import userIcon from '@/assets/images/user-icon.svg'
 import basketIconMobile from '@/assets/images/basket-icon-mobile.svg'
 import searchIconMobile from '@/assets/images/search-icon-mobile.svg'
+import closeIcon from '@/assets/images/close-icon.svg'
+import arrowMoreInfo from '@/assets/images/arrow-more-info.svg'
+import contactTelIcon from '@/assets/images/contact-tel-icon.svg'
+import contactEmailIcon from '@/assets/images/contact-email-icon.svg'
+
 
 import logoHeader from '@/assets/images/logo-header.svg'
 import promo from '@/assets/images/promo.svg'
@@ -111,10 +193,15 @@ import catalogIcon from '@/assets/images/catalog-icon.svg'
 import basketIcon from '@/assets/images/basket-icon.svg'
 
 const isMobileMenuOpen = ref(false)
+const activeTab = ref('catalog')
 const searchQuery = ref('')
 
 const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false
 }
 
 const handleCatalogClick = () => {}
@@ -133,17 +220,28 @@ const navItems = [
     {title:'Контакты', path: '/contacts'}
 ]
 
+const mobileMenuItems = [
+    {title:'Личный кабинет', path: '/account'},
+    ...navItems
+]
+
 const cartCount = ref(12)
 const hasNotifications = ref(true)
+
+watch(isMobileMenuOpen, (isOpen) => {
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+})
+
+
 </script>
 
 <style lang="scss" scoped>
 .header {
     border-bottom: 0.1rem solid $color-black;
-    margin-top: 1.7rem;
+    margin: 1.7rem 0 0 0;
     @include font(1.3rem, 1, 500);
     @include respond-to('mobile') {
-            margin-top: 0;
+            margin: 0;
             border: none;
         }
 
@@ -167,7 +265,7 @@ const hasNotifications = ref(true)
         display: flex;
         align-items: center;
         gap: 2.5rem;
-        margin-right: 2rem
+        margin: 0 2rem 0 0;
     }
 
     &__burger-btn {
@@ -215,19 +313,17 @@ const hasNotifications = ref(true)
         color: $color-black;
     }
 
+    &__mobile-basket-icon,
     &__mobile-search-icon,
     &__mobile-bell-icon,
     &__mobile-user-icon {
         display: block;
         width: 2rem;
         height: 2rem;
+        color: $color-black;
     }
 
-    &__mobile-basket-icon {
-        display: block;
-        width: 2.2rem;
-        height: 2.2rem;
-    }
+     
 
     &__notification-dot {
         position: absolute;
@@ -240,28 +336,10 @@ const hasNotifications = ref(true)
         border: 0.1rem solid $color-white;
     }
 
-    &__mobile-nav {
-        display: none;
-
-        @include respond-to('mobile') {
-            display: block;
-            padding: 1.6rem;
-            border-top: 0.1rem solid $color-very-gray-light;
-        }
-    }
-
-    &__mobile-nav-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1.6rem;
-    }
-
     &__top {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 1.8rem;
-        margin-left: 1.7rem; 
-        margin-right: 1.7rem;
+        margin: 0 1.7rem 1.8rem 1.7rem;
 
         @include respond-to('mobile') {
             display: none;
@@ -293,10 +371,10 @@ const hasNotifications = ref(true)
         display: flex;
         border: 0.1rem solid $color-very-gray-light;
         border-style: none solid;
-        padding-right: 2.1rem;
+        padding: 0 2.1rem 0 0;
         align-items: center;
         justify-content: center;
-        margin-left: 2.5rem;
+        margin: 0 0 0 2.5rem;
         transition: color 0.2s ease;
 
         @include hover {
@@ -313,8 +391,7 @@ const hasNotifications = ref(true)
         height: 1.2rem;
         flex-shrink: 0;
         padding: 0.15rem;
-        margin-right: 0.5rem;
-        margin-left: 2.3rem;
+        margin: 0 0.5rem 0 2.3rem;
     }
 
     &__contacts {
@@ -338,9 +415,8 @@ const hasNotifications = ref(true)
     &__bottom {
         display: flex;
         align-items: center;
-        padding-bottom: 1.4rem;
-        margin-left: 1.7rem; 
-        margin-right: 1.7rem;
+        padding: 0 0 1.4rem 0;
+        margin: 0 1.7rem 0 1.7rem;
 
         @include respond-to('mobile') {
             display: none;
@@ -356,7 +432,7 @@ const hasNotifications = ref(true)
 
     &__toolbar {
         display: flex;
-        margin-left: 2.1rem;
+        margin: 0 0 0 2.1rem;
         gap: 1rem;
         align-items: center;
     }
@@ -452,7 +528,7 @@ const hasNotifications = ref(true)
 
     &__basket-icon {
         display: flex;
-        margin-right: 0.4rem;
+        margin: 0 0.4rem 0 0;
         width: 1.6rem;
         height: 1.6rem;
     }   
@@ -495,5 +571,226 @@ const hasNotifications = ref(true)
         transition: background 0.2s ease;
         @include button-primary-interactive;
     }
+}
+
+
+.mobile-menu-backdrop {
+    display: none;
+
+    @include respond-to('mobile') {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        background: rgba($color-black, 0.4);
+    }
+}
+
+.mobile-menu {
+    display: none;
+
+    @include respond-to('mobile') {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        width: 100%;
+        height: 100dvh;
+        background: $color-white;
+        overflow-y: auto;
+        color: $color-black;
+        @include font(1.3rem, 1, 500);
+    }
+
+
+    &__topbar {
+        display: flex;
+        border-bottom: 0.1rem solid $color-very-gray-light;
+        flex-shrink: 0;
+    }
+
+    &__close-icon {
+        width: 2rem;
+        height: 2rem;
+        color: $color-black;
+    }
+
+    &__login {
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+        padding: 2.5rem 2rem;
+        background: $color-very-gray-light;
+        flex-shrink: 0;
+    }
+
+    &__login-text {
+        @include font(1.8rem, 1, 600, $color-black);
+    }
+
+    &__login-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 4rem;
+        border: none;
+        border-radius: 0.6rem;
+        background-color: $color-primary;
+        color: $color-white;
+        cursor: pointer;
+        @include font(1.3rem, 1, 700);
+        @include hover {
+            background: rgba($color-primary, 0.7);
+        }
+    }
+
+    &__tab:first-of-type{
+        border-right: 0.1rem solid $color-very-gray-light;
+    }
+    &__tabs {
+        display: flex;
+        height: 5.6rem;
+        padding: 1rem 0 1rem 0;
+        flex-shrink: 0;
+        border-bottom: 0.1rem solid $color-very-gray-light;
+    }
+
+    &__tab {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        padding: 0.6rem 0;
+        border: none;
+        border-bottom: 0.2rem solid transparent;
+        background: none;
+        color: $color-gray;
+        cursor: pointer;
+        @include font(1.5rem, 1, 600, $color-dark);
+
+        &--active {
+            color: $color-primary;
+        }
+    }
+
+    &__tab-icon {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 0 2rem 0 2rem;
+    }
+
+    &__item {
+        border-bottom: 0.1rem solid $color-very-gray-light;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.8rem 0;
+        color: $color-black;
+        text-decoration: none;
+        @include font(1.5rem, 1, 500, $color-dark);
+
+        @include hover {
+            color: $color-primary;
+        }
+    }
+
+    &__chevron {
+        width: 2rem;
+        height: 2rem;
+        color: $color-gray;
+        flex-shrink: 0;
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.6rem;
+        background: $color-very-gray-light;
+        flex-shrink: 0;
+    }
+
+    &__footer-contacts {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    &__footer-phone {
+        color: $color-black;
+        text-decoration: none;
+        @include font(1.5rem, 1, 600);
+
+        @include hover {
+            color: $color-primary;
+        }
+    }
+
+    &__footer-note {
+        @include font(1.2rem, 1, 500, $color-gray-light);
+    }
+
+    &__footer-actions {
+        display: flex;
+        gap: 1rem;
+        flex-shrink: 0;
+    }
+
+    &__footer-action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.3rem;
+        height: 3.3rem;
+        color: $color-primary;
+        flex-shrink: 0;
+
+        svg {
+            width:100%;
+            height:100%
+        }
+
+        @include hover {
+            background-color: $color-primary;
+            color: $color-white;
+        }
+    }
+}
+
+
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+    transform: translateX(-100%);
+}
+
+.mobile-menu-backdrop-enter-active,
+.mobile-menu-backdrop-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-backdrop-enter-from,
+.mobile-menu-backdrop-leave-to {
+    opacity: 0;
 }
 </style>

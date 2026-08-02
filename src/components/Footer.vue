@@ -365,7 +365,10 @@ const socialMediaLinks = [
             &__nav-list--media {
                 justify-content: center;
                 margin-top: 0;
+                padding-bottom: 3rem;
                 order: 2;
+                border-bottom: 0.1rem solid rgba($color-white, 0.1);
+
             }
 
             &__top-feedback {
@@ -382,9 +385,10 @@ const socialMediaLinks = [
                     width: auto;
                     order: 1;
                     height: auto;
-                    padding: 1.25rem 11.6rem 1.25rem 11.7rem;
+                    padding: 1.25rem 1.25rem;
                     margin-left: 2rem;
                     margin-right: 2rem;
+                    
                 }
             }
 
@@ -396,13 +400,18 @@ const socialMediaLinks = [
                 margin-right: 1.6rem;
                 padding-top: 2rem;
                 padding-bottom: 2.4rem;
-                gap: 1.6rem;
-                border-top: 0.1rem solid rgba($color-white, 0.1);
+                gap: 1.5rem;
+                @include font(1.2rem, 1, 500, $color-white);
+                
             }
 
             &__bottom-manager-link {
                 order: 1;
             }
+            &__copyright{
+                @include font(1.2rem, 1, 500, $color-white);
+            }
+           
 
             &__bottom-left {
                 order: 2;
@@ -421,6 +430,11 @@ const socialMediaLinks = [
 
             &__bottom-text {
                 order: 3;
+                @include font(1.2rem, 1, 500, #C8C8D2);
+            }
+
+            &__bottom-link{
+                @include font(1.2rem, 1, 500, #C8C8D2);
             }
         }
     }

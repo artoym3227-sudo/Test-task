@@ -73,19 +73,13 @@ const brandsList = [
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        margin-top: 2.4rem;
-        margin-right: 6rem;
-        margin-left: 3rem;
-        margin-bottom: 3rem;
+        margin: 2.4rem 6rem 3rem 3rem;
         flex-shrink: 0;
 
         @include respond-to('mobile') {
             flex-direction: column;
             align-items: center;
-            margin-top: 2.5rem;
-            margin-left: 0;
-            margin-right: 0;
-            margin-bottom: 2.5rem;
+            margin: 2.5rem 0 2.5rem 0;
             gap: 1rem;
         }
     }
@@ -151,7 +145,7 @@ const brandsList = [
     justify-content: end;
 
     @include respond-to('mobile') {
-        margin-left: 5rem;
+        margin: 0 0 0 5rem;
         gap: 1rem;
         flex-wrap: nowrap;
         justify-content: flex-start;
@@ -202,8 +196,7 @@ const brandsList = [
 
         @include respond-to('mobile') {
             flex-direction: column;
-            margin-left: 2rem;
-            margin-right: 2rem;
+            margin: 0 2rem 0 2rem;
             gap: 1rem;
         }
     }
@@ -212,7 +205,7 @@ const brandsList = [
         display: flex;
         justify-content: space-between;
         position: relative;
-        padding: 3.1rem 3rem 3rem 3em;
+        padding: 3.1rem 3rem 3rem 3rem;
         width: 50%;
         height: 20.8rem;
         text-decoration: none;
@@ -237,20 +230,20 @@ const brandsList = [
 
         &--parts {
             @include respond-to('mobile') {
-                margin-right: 0;
+                margin: 0;
             }
         }
 
         &--machinery {
             @include respond-to('mobile') {
-                margin-left: 0;
+                margin: 0;
             }
         }
     }
 
     &__offer-text {
         align-self: flex-end;
-        margin-right: auto;
+        margin: 0 auto 0 0;
         padding: 0;
         z-index: 1;
         @include font(2.4rem, 1, 600, $color-dark);
