@@ -96,20 +96,21 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
-import engineImage from '@/assets/images/engine-parts.png'
+
+import engineImageSlider from '@/assets/images/engine-parts-slider.png'
 import wavePattern from '@/assets/images/wave-pattern.svg'
 import arrowPrev from '@/assets/images/arrow-prev.svg'
 import arrowNext from '@/assets/images/arrow-next.svg'
 
 const slides = [
   {
-    image: engineImage,
+    image: engineImageSlider,
     titleNormal: 'Распродажа запчастей',
     titleAccent: 'по специальным ценам',
     text: 'Распродажа складских остатков оригинальных запасных частей на технику hitachi, new holland, case, kobelco, cat, komatsu'
   },
   {
-    image: engineImage,
+    image: engineImageSlider,
     titleNormal: 'Распродажа запчастей',
     titleAccent: 'по специальным ценам',
     text: 'Распродажа складских остатков оригинальных запасных частей на технику hitachi, new holland, case, kobelco, cat, komatsu'
@@ -118,13 +119,13 @@ const slides = [
 
 const slidesMobile = [
   {
-    image: engineImage,
+    image: engineImageSlider,
     titleNormal: 'Техстройконтракт',
     text: 'строительно-дорожная техника и запчасти от ведущих мировых производителей',
     subtext: 'Широкая линейка двигателей на спецтехники'
   },
   {
-    image: engineImage,
+    image: engineImageSlider,
     titleNormal: 'Техстройконтракт',
     text: 'строительно-дорожная техника и запчасти от ведущих мировых производителей',
     subtext: 'Широкая линейка двигателей на спецтехники'
@@ -325,6 +326,7 @@ const handleDetailsClick = (slide) => {
 
     @include hover {
       background: rgba($color-primary, 0.7);
+      transition: background 0.4s ease;
     }
 
     @include focus-visible {
@@ -355,6 +357,10 @@ const handleDetailsClick = (slide) => {
 
     @include hover {
       color: $color-white;
+      background: $color-primary;
+      transition: background 0.4s ease, color 0.4s ease;
+      
+      
     }
 
     @include respond-to('mobile') {
@@ -363,18 +369,14 @@ const handleDetailsClick = (slide) => {
 
     &--prev {
       left: 1rem;
-      @include hover {
-        color: $color-white;
-      }
+     
     }
 
     &--next {
       right: 1rem;
     }
 
-    @include hover {
-      background: $color-primary;
-    }
+    
 
     @include focus-visible;
 

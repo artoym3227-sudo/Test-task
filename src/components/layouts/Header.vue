@@ -20,7 +20,9 @@
             </div>
         </div>
         <div class="header__bottom">
-            <logoHeader class="header__logo" alt="logo-of-company"/>
+            <router-link to="#" class="header__logo">
+             <logoHeader class="header__logo" alt="logo-of-company"/>
+            </router-link>
             <div class="header__us-interaction">
                 <div class="header__toolbar">
                     <button type="button" class="header__catalog-btn" @click="handleCatalogClick">
@@ -278,6 +280,10 @@ watch(isMobileMenuOpen, (isOpen) => {
         background: none;
         cursor: pointer;
         flex-shrink: 0;
+        &:active {
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+    }
     }
 
     &__burger-icon {
@@ -290,6 +296,7 @@ watch(isMobileMenuOpen, (isOpen) => {
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+
     }
 
     &__mobile-logo-icon {
@@ -297,6 +304,10 @@ watch(isMobileMenuOpen, (isOpen) => {
         width: 4.9rem;
         height: 3.4rem;
         overflow: visible;
+        &:active {
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+    }
     }
 
     &__mobile-action-btn {
@@ -311,6 +322,10 @@ watch(isMobileMenuOpen, (isOpen) => {
         cursor: pointer;
         flex-shrink: 0;
         color: $color-black;
+        &:active {
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+    }
     }
 
     &__mobile-basket-icon,
@@ -358,10 +373,12 @@ watch(isMobileMenuOpen, (isOpen) => {
     &__nav-link {
         color: inherit;
         text-decoration: none;
-        transition: color 0.2s ease;
+        
 
         @include hover {
             color: $color-primary;
+            transition: color 0.4s ease;
+
         }
 
         @include focus-visible;
@@ -375,11 +392,12 @@ watch(isMobileMenuOpen, (isOpen) => {
         align-items: center;
         justify-content: center;
         margin: 0 0 0 2.5rem;
-        transition: color 0.2s ease;
+       
 
         @include hover {
             color: $color-primary;
             border: $color-primary; 
+            transition: color 0.4s ease;
         }
 
         @include focus-visible;
@@ -403,10 +421,11 @@ watch(isMobileMenuOpen, (isOpen) => {
     &__contacts-email {
         color: inherit;
         text-decoration: none;
-        transition: color 0.2s ease;
+        
 
         @include hover {
             color: $color-primary;
+            transition: color 0.4s ease;
         }
 
         @include focus-visible;
@@ -441,6 +460,10 @@ watch(isMobileMenuOpen, (isOpen) => {
         width: 28.7rem;
         height: 3.8rem;
         max-width: 100%;
+        @include hover{
+            transform: translateY(-0.2rem);
+            transition: transform 0.4s ease;
+        }
     }
 
     &__catalog-btn {
@@ -459,22 +482,29 @@ watch(isMobileMenuOpen, (isOpen) => {
         @include font(1.3rem, 1, 700);
         @include hover {
             background: rgba($color-primary, 0.7);
-            color: $color-black;
+            color: $color-dark;
+            transition: color 0.4s ease, background 0.4s ease;
+            
+            
         }
     }
  
     &__catalog-icon {
         width: 1.6rem;
         height: 1.6rem;
-        @include hover {
-            color: $color-black;
-        }
     }
 
     &__search {
         display: flex;
         max-height: 100%;
         position: relative;
+
+        @include hover {
+            .header__search-icon {
+                color: $color-primary;
+                transition: color 0.4s ease;
+            }
+        }
     }
 
     &__search-input {
@@ -486,9 +516,19 @@ watch(isMobileMenuOpen, (isOpen) => {
         height: fit-content;
         border-radius: 0.6rem;
         border: 0.1rem solid $color-very-gray-light;
-        transition: background 0.2s ease;
 
-        @include button-primary-interactive;
+        &::placeholder {
+            color: $color-gray;
+            transition: color 0.4s ease;
+        }
+
+        @include hover {
+            border-color: $color-primary;
+
+            &::placeholder {
+                color: $color-primary;
+            }
+        };
 
         @include focus-visible;
     }
@@ -500,7 +540,9 @@ watch(isMobileMenuOpen, (isOpen) => {
         right: 1.2rem;
         top: 50%;
         transform: translateY(-50%);
-        pointer-events: none
+        pointer-events: none;
+        color: $color-gray;
+        transition: color 0.4s ease;
     }
 
     &__user-actions {
@@ -614,6 +656,7 @@ watch(isMobileMenuOpen, (isOpen) => {
         width: 2rem;
         height: 2rem;
         color: $color-black;
+        
     }
 
     &__login {
@@ -643,6 +686,7 @@ watch(isMobileMenuOpen, (isOpen) => {
         @include font(1.3rem, 1, 700);
         @include hover {
             background: rgba($color-primary, 0.7);
+            transition: color 0.4s ease;
         }
     }
 
@@ -707,6 +751,7 @@ watch(isMobileMenuOpen, (isOpen) => {
 
         @include hover {
             color: $color-primary;
+            transition: color 0.4s ease;
         }
     }
 
@@ -739,6 +784,7 @@ watch(isMobileMenuOpen, (isOpen) => {
 
         @include hover {
             color: $color-primary;
+            transition: color 0.4s ease;
         }
     }
 
@@ -769,6 +815,7 @@ watch(isMobileMenuOpen, (isOpen) => {
         @include hover {
             background-color: $color-primary;
             color: $color-white;
+            transition: color 0.4s ease;
         }
     }
 }

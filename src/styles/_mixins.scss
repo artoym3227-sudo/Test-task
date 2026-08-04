@@ -1,8 +1,9 @@
 @use './variables' as *;
+@use "sass:map";
 
 @mixin container {
     width: 100%;
-    max-width: 192rem;
+    max-width: 1940px;
     margin: 0 auto;
 
     @include respond-to('mobile') {
@@ -13,8 +14,8 @@
 }
 
 @mixin respond-to($breakpoint) {
-    @if map-has-key($breakpoints, $breakpoint) {
-        @media (max-width: map-get($breakpoints, $breakpoint)) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        @media (max-width: map.get($breakpoints, $breakpoint)) {
             @content;
         }
     }

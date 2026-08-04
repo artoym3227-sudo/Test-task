@@ -101,64 +101,53 @@ const brandsList = [
     
     &__brands {
         max-width: 100%;
-
-        @include respond-to('mobile') {
-            width: 100%;
-            overflow: hidden;
-            -webkit-mask-image: linear-gradient(
-                to right,
-                transparent 0,
-                $color-black 3%,
-                $color-black 97%,
-                transparent 100%
-            );
-            mask-image: linear-gradient(
-                to right,
-                transparent 0,
-                $color-black 3%,
-                $color-black 97%,
-                transparent 100%
-            );
-        }
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            $color-black 3%,
+            $color-black 97%,
+            transparent 100%
+        );
+        mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            $color-black 3%,
+            $color-black 97%,
+            transparent 100%
+        );
     }
 
 
     &__track {
         display: flex;
         align-items: center;
-        justify-content: end;
-
-        @include respond-to('mobile') {
-            justify-content: flex-start;
-            width: max-content;
-            animation: brands-marquee 22s linear infinite;
-        }
+        justify-content: flex-start;
+        width: max-content;
+        animation: brands-marquee 22s linear infinite;
     }
 
     &__brands-group {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 5rem;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    justify-content: end;
-
-    @include respond-to('mobile') {
-        margin: 0 0 0 5rem;
-        gap: 1rem;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 5rem;
+        margin-right: 5rem;
+        flex-shrink: 0;
         flex-wrap: nowrap;
         justify-content: flex-start;
-    }
-
-    &--duplicate {
-        display: none;
 
         @include respond-to('mobile') {
+            margin-right: 2rem;
+            gap: 1rem;
+        }
+
+        &--duplicate {
             display: flex;
         }
     }
-}
 
     &__item {
         
@@ -168,6 +157,7 @@ const brandsList = [
     &__link {
         @include hover {
             opacity: 0.8;
+            
         }
 
         @include focus-visible;
@@ -193,7 +183,6 @@ const brandsList = [
         display: flex;
         margin: 0 3rem;
         gap: 2rem;
-
         @include respond-to('mobile') {
             flex-direction: column;
             margin: 0 2rem 0 2rem;
@@ -213,12 +202,17 @@ const brandsList = [
         box-sizing: border-box;
         overflow: visible;
         cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease;
+        background-color: #f8f9fd;
 
         @include hover {
             transform: translateY(-0.2rem);
-            box-shadow: 0 0.4rem 1.2rem rgba($color-black, 0.1);
-            color: rgba($color-primary, 0.7);
+            background: $color-very-gray-light;
+            border-radius: 0.6rem;
+            .brands-info__offer-text,
+            .brands-info__offer-arrow {
+                color: rgba($color-primary, 0.7);
+            }
         }
 
         @include focus-visible;
@@ -247,6 +241,8 @@ const brandsList = [
         padding: 0;
         z-index: 1;
         @include font(2.4rem, 1, 600, $color-dark);
+        transition: color 0.4s ease;
+
         @include respond-to('mobile') {
                 @include font(1.6rem, 1, 500, $color-dark);
             }
@@ -282,6 +278,9 @@ const brandsList = [
         width: 1.9rem;
         height: 1.9rem;
         overflow: visible;
+        color: $color-dark;
+        transition: color 0.4s ease;
+
         @include respond-to('mobile') {
                 width: 1.4rem;
                 height: 1.4rem;

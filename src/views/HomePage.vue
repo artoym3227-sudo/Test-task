@@ -8,10 +8,10 @@
 </template> 
 
 <script setup>
-import Slider from '@/components/Slider.vue'
-import MainPromo from '@/components/MainPromo.vue'
-import MainBrands from '@/components/MainBrands.vue'
-import NewsCards from '@/components/NewsCards.vue'
+import Slider from '@/components/mainpage/HeroSlider.vue'
+import MainPromo from '@/components/mainpage/MainPromo.vue'
+import MainBrands from '@/components/mainpage/MainBrands.vue'
+import NewsCards from '@/components/mainpage/NewsCards.vue'
 
 const handleDetailsClick = (slide) => {
     console.log('Details clicked:', slide)

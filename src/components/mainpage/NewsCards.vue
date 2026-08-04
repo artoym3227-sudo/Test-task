@@ -182,6 +182,7 @@ const newsItems = [
         flex-shrink: 0;
         @include hover {
             color: rgba($color-primary, 1);
+            transition: color 0.4s ease;
         }
         &:disabled {
             opacity: 0.4;
@@ -220,7 +221,9 @@ const newsItems = [
     
     @include hover {
             transform: translateY(-0.2rem);
-            box-shadow: 0 0.4rem 1.2rem rgba($color-black, 0.1);
+            transition: transform 0.4s ease;
+            background: $color-very-gray-light;
+            border-radius: 0.6rem;
         }
 
     @include respond-to('mobile') {
@@ -258,6 +261,8 @@ const newsItems = [
         max-width: 100%;
         display: -webkit-box;
         overflow: hidden;
+        padding-left: 0.8rem;
+        padding-right: 0.8rem;
         @include font(1.5rem, 1.4, 600, $color-dark);
 
         @include respond-to('mobile') {

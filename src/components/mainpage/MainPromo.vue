@@ -106,21 +106,22 @@ const promoItems = [
     }
 
     &__item {
-        max-width: 100%;
-        cursor: pointer;
-        @include hover {
-            transform: translateY(-0.2rem);
-            box-shadow: 0 0.4rem 1.2rem rgba($color-black, 0.1);
-        }
+    max-width: 100%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 
-        @include respond-to('mobile') {
-            height: auto;
+    @include hover {
+        transform: translateY(-0.2rem);
+    }
 
-            &:not(:first-child) {
-                margin-bottom: 1rem;
-            }
+    @include respond-to('mobile') {
+        height: auto;
+
+        &:not(:first-child) {
+            margin-bottom: 1rem;
         }
     }
+}
 
     &__banner {
         display: flex;
@@ -130,10 +131,10 @@ const promoItems = [
         padding: 3rem 3rem 2.4rem 3.2rem;
         border-radius: 1.2rem;
         background: $color-primary;
+        transition: color 0.4s ease, transform 2s ease;
         @include font(2.4rem, 1, 600, $color-white);
         @include hover {
             transform: translateY(-0.2rem);
-            box-shadow: 0 0.4rem 1.2rem rgba($color-black, 0.1);
             color: rgba($color-black, 0.7);
         }
 
@@ -173,11 +174,14 @@ const promoItems = [
     &__card {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 4rem;
         height: 100%;
         padding: 0.5rem;
         background: $color-white;
-
+        @include hover {
+        background: $color-very-gray-light;
+        border-radius: 0.6rem;
+        }
         @include respond-to('mobile') {
             flex-direction: column;
             align-items: stretch;
@@ -239,6 +243,7 @@ const promoItems = [
         padding: 0.8rem 1.3rem;
         border-radius: 0.6rem;
         background: $color-primary;
+        transition: background 0.4s ease;
         @include font(1.3rem, 1, 700, $color-white);
         @include button-primary-interactive;
         @include respond-to('mobile') {
