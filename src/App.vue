@@ -1,30 +1,19 @@
 <template>
-  <div class="container">
-    <header><Header/></header>
-    <main><Slider/>
-    <MainBrands/>
-    <MainPromo/>
-    <NewsCards/></main>
-    <footer><Footer/></footer>
-  </div>
+    <div class="container">
+        <Header/>
+        <router-view/>
+    </div>
+        <Footer/>
+    
 </template>
 
-<style scoped>
-  .container{
-    width: 100%;
-    max-width: 192rem;
-    margin-right: auto;
-    margin-left: auto;
-  }
-</style>
-
-
 <script setup>
-
-  import Header from '@components/Header.vue';
-  import Slider from '@components/Slider.vue';
-  import MainBrands from '@components/MainBrands.vue'
-  import MainPromo from '@/components/MainPromo.vue';
-  import NewsCards from '@/components/NewsCards.vue';
-  import Footer from '@/components/Footer.vue';
+import Header from '@/components/layouts/Header.vue'
+import Footer from '@/components/layouts/Footer.vue'
 </script>
+
+<style lang="scss" scoped>
+.container {
+    @include container;
+}
+</style>
