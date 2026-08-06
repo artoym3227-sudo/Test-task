@@ -423,9 +423,17 @@ const onSubmit = handleSubmit(async (values) => {
         padding-top: 3rem;
         background-color: $color-dark;
         overflow-x: hidden;
+        @include respond-to('mobile') {
+            padding-left: 0rem;
+            padding-right: 0rem;
+            align-items: normal;
+            width: 100%;
+                }
+
 
         &__container{
             max-width: 1920px;
+            
             
         }
         &__top {
@@ -433,6 +441,8 @@ const onSubmit = handleSubmit(async (values) => {
             width: 100%;
             height: 55%;
             box-sizing: border-box;
+            
+            
         }
 
         &__links {
@@ -445,6 +455,7 @@ const onSubmit = handleSubmit(async (values) => {
 
             &--mobile {
                 display: none;
+                padding-left: 3rem;
             }
         }
 
@@ -633,6 +644,7 @@ const onSubmit = handleSubmit(async (values) => {
 
             &__contacts {
                 order: 2;
+                padding-left: 3rem;
             }
 
             &__nav-list--contacts {
