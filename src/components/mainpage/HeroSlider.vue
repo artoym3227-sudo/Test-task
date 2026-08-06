@@ -319,14 +319,13 @@ const handleDetailsClick = (slide) => {
     background: transparent;
     border-radius: 0.6rem;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.4s ease;
     @include font(1.3rem, 1, 700, $color-white);
     text-decoration: none;
     white-space: nowrap;
 
     @include hover {
       background: rgba($color-primary, 0.7);
-      transition: background 0.4s ease;
     }
 
     @include focus-visible {
@@ -353,14 +352,11 @@ const handleDetailsClick = (slide) => {
     border-radius: 0.6rem;
     cursor: pointer;
     box-shadow: 0 0.1rem 0.5rem rgba($color-black, 0.15);
-    transition: background 0.2s ease, opacity 0.2s ease;
+    transition: background 0.4s ease, color 0.4s ease, opacity 0.2s ease;
 
     @include hover {
       color: $color-white;
       background: $color-primary;
-      transition: background 0.4s ease, color 0.4s ease;
-      
-      
     }
 
     @include respond-to('mobile') {
