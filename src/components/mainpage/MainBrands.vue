@@ -8,7 +8,7 @@
                     <ul class="brands-info__brands-group">
                         <li v-for="(item, key) in brandsList" :key="`a-${key}`" class="brands-info__item">
                             <router-link :to="item.path" class="brands-info__link">
-                                <img :src="item.image" :alt="item.title" class="brands-info__img" loading="lazy">
+                                <img :src="item.image" :alt="item.title" class="brands-info__img" loading="eager">
                             </router-link>
                         </li>
                     </ul>
@@ -16,7 +16,7 @@
                     <ul class="brands-info__brands-group brands-info__brands-group--duplicate" aria-hidden="true">
                         <li v-for="(item, key) in brandsList" :key="`b-${key}`" class="brands-info__item">
                             <router-link :to="item.path" class="brands-info__link" tabindex="-1">
-                                <img :src="item.image" :alt="item.title" class="brands-info__img" loading="lazy">
+                                <img :src="item.image" :alt="item.title" class="brands-info__img" loading="eager">
                             </router-link>
                         </li>
                     </ul>
@@ -73,7 +73,7 @@ const brandsList = [
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        margin: 2.4rem 6rem 3rem 3rem;
+        margin: 2.4rem 0rem 3rem 3rem;
         flex-shrink: 0;
 
         @include respond-to('mobile') {
