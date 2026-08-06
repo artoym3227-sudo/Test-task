@@ -460,9 +460,9 @@ watch(isMobileMenuOpen, (isOpen) => {
         width: 28.7rem;
         height: 3.8rem;
         max-width: 100%;
+        transition: transform 0.4s ease;
         @include hover{
             transform: translateY(-0.2rem);
-            transition: transform 0.4s ease;
         }
     }
 
@@ -479,13 +479,11 @@ watch(isMobileMenuOpen, (isOpen) => {
         border-radius: 0.6rem;
         background-color: $color-primary;
         color: $color-white;
+        transition: color 0.4s ease, background 0.4s ease;
         @include font(1.3rem, 1, 700);
         @include hover {
             background: rgba($color-primary, 0.7);
             color: $color-dark;
-            transition: color 0.4s ease, background 0.4s ease;
-            
-            
         }
     }
  
@@ -502,7 +500,6 @@ watch(isMobileMenuOpen, (isOpen) => {
         @include hover {
             .header__search-icon {
                 color: $color-primary;
-                transition: color 0.4s ease;
             }
         }
     }
@@ -683,10 +680,10 @@ watch(isMobileMenuOpen, (isOpen) => {
         background-color: $color-primary;
         color: $color-white;
         cursor: pointer;
+        transition: background-color 0.4s ease;
         @include font(1.3rem, 1, 700);
         @include hover {
-            background: rgba($color-primary, 0.7);
-            transition: color 0.4s ease;
+            background-color: rgba($color-primary, 0.7);
         }
     }
 
@@ -747,11 +744,11 @@ watch(isMobileMenuOpen, (isOpen) => {
         padding: 1.8rem 0;
         color: $color-black;
         text-decoration: none;
+        transition: color 0.4s ease;
         @include font(1.5rem, 1, 500, $color-dark);
 
         @include hover {
             color: $color-primary;
-            transition: color 0.4s ease;
         }
     }
 
@@ -780,11 +777,11 @@ watch(isMobileMenuOpen, (isOpen) => {
     &__footer-phone {
         color: $color-black;
         text-decoration: none;
+        transition: color 0.4s ease;
         @include font(1.5rem, 1, 600);
 
         @include hover {
             color: $color-primary;
-            transition: color 0.4s ease;
         }
     }
 
@@ -806,6 +803,7 @@ watch(isMobileMenuOpen, (isOpen) => {
         height: 3.3rem;
         color: $color-primary;
         flex-shrink: 0;
+        transition: color 0.4s ease, background-color 0.4s ease;
 
         svg {
             width:100%;
@@ -815,7 +813,6 @@ watch(isMobileMenuOpen, (isOpen) => {
         @include hover {
             background-color: $color-primary;
             color: $color-white;
-            transition: color 0.4s ease;
         }
     }
 }
