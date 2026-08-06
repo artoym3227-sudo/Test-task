@@ -1,1083 +1,843 @@
 <template>
-    <footer class="footer">
-        <div class="footer__container">
-        <div class="footer__top">
-            <div class="footer__links">
-                <ul
-                    v-for="column in linkColumns"
-                    :key="column.title"
-                    class="footer__nav-list"
-                >
-                    <li v-for="(item, key) in column.items" :key="key" class="footer__nav-item">
-                        <router-link :to="item.path" class="footer__nav-link">{{ item.title }}</router-link>
+    <header class="header">
+        <div class="header__top">
+            <nav class="header__nav">
+                <ul class="header__nav-list">
+                    <li v-for="(item, key) in navItems" :key="key" class="header__nav-item">
+                        <router-link :to="item.path" class="header__nav-link">{{ item.title }}</router-link>
+                    </li>
+                    <li class="header__nav-item">
+                        <a href="/" class="header__promo">
+                            <promo class="header__promo-icon"/>
+                            Акции
+                        </a>
                     </li>
                 </ul>
+            </nav>
+            <div class="header__contacts">
+                <a href="tel:+7-800-700-03-30" class="header__contacts-phone">8-800-700-03-30</a>
+                <a href="mailto:tsk@gmail.com" class="header__contacts-email">tsk@gmail.com</a>
             </div>
-
-            <div class="footer__links footer__links--mobile">
-                <ul
-                    v-for="(column, idx) in mobileLinkColumns"
-                    :key="idx"
-                    class="footer__nav-list"
-                >
-                    <li v-for="(item, key) in column" :key="key" class="footer__nav-item">
-                        <router-link :to="item.path" class="footer__nav-link">{{ item.title }}</router-link>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="footer__social-links">
-                <div class="footer__contacts">
-                    <ul class="footer__nav-list footer__nav-list--contacts">
-                        <li v-for="(item, key) in socialContacts" :key="key" class="footer__nav-item">
-                            <router-link :to="item.path" class="footer__nav-link">{{ item.title }}</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="footer__contacts-media">
-                    <button
-                        class="footer__feedback-btn footer__feedback-btn--mobile"
-                        type="button"
-                        @click="openFeedback"
-                    >
-                        Обратная связь
+        </div>
+        <div class="header__bottom">
+            <router-link to="#" class="header__logo">
+             <logoHeader class="header__logo" alt="logo-of-company"/>
+            </router-link>
+            <div class="header__us-interaction">
+                <div class="header__toolbar">
+                    <button type="button" class="header__catalog-btn" @click="handleCatalogClick">
+                        <catalogIcon class="header__catalog-icon" alt=""/>
+                        Каталог
                     </button>
-                    <ul class="footer__nav-list footer__nav-list--media">
-                        <li v-for="(item, key) in socialMediaLinks" :key="key" class="footer__nav-item">
-                            <router-link :to="item.path" class="footer__nav-link">
-                                <component :is="item.icon" :alt="item.title" />
-                            </router-link>
-                        </li>
-                    </ul>
+                    <div class="header__search">
+                        <input 
+                            type="text" 
+                            placeholder="Поиск" 
+                            class="header__search-input"
+                            v-model="searchQuery"
+                            @keyup.enter="handleSearch"
+                        />
+                        <searchIcon alt="" class="header__search-icon" @click="handleSearch"/>
+                    </div>
                 </div>
+                
+                <div class="header__user-actions">
+                    <button type="button" class="header__basket-btn" @click="handleBasketClick">
+                        <basketIcon alt="" class="header__basket-icon"/>
+                        Корзина
+                        <span class="header__basket-count">{{ cartCount }}</span>
+                    </button>
+                    
+                    <button type="button" class="header__authorization-btn" @click="handleAuthClick">
+                        Войти
+                    </button>
+                </div>
+            </div>    
+        </div>
+
+        <div class="header__mobile-bar">
+            <div class="header__mobile-left">
+                <button type="button" class="header__burger-btn" @click="toggleMobileMenu" aria-label="Меню">
+                    <burgerIcon class="header__burger-icon" alt=""/>
+                </button>
+
+                <router-link to="#" class="header__mobile-logo">
+                    <logoHeaderMobile alt="logo-of-company" class="header__mobile-logo-icon"/>
+                </router-link>
             </div>
 
-            <div class="footer__top-feedback">
-                <button
-                    class="footer__feedback-btn footer__feedback-btn--desktop"
-                    type="button"
-                    @click="openFeedback"
-                >
-                    Обратная связь
+            <div class="header__mobile-right">
+                <button type="button" class="header__mobile-action-btn" @click="handleSearch" aria-label="Поиск">
+                    <searchIconMobile alt="" class="header__mobile-search-icon"/>
+                </button>
+                <button type="button" class="header__mobile-action-btn header__mobile-action-btn--bell" aria-label="Уведомления">
+                    <bellIcon alt="" class="header__mobile-bell-icon"/>
+                    <span v-if="hasNotifications" class="header__notification-dot"></span>
+                </button>
+                <button type="button" class="header__mobile-action-btn header__mobile-action-btn--cart" @click="handleBasketClick" aria-label="Корзина">
+                    <basketIconMobile alt="" class="header__mobile-basket-icon"/>
+                    <span v-if="cartCount" class="header__basket-count header__basket-count--mobile">{{ cartCount }}</span>
+                </button>
+                <button type="button" class="header__mobile-action-btn" @click="handleAuthClick" aria-label="Профиль">
+                    <userIcon alt="" class="header__mobile-user-icon"/>
                 </button>
             </div>
         </div>
 
-        <div class="footer__bottom">
-            <div class="footer__bottom-left">
-                <span class="footer__copyright">© ООО «Техстройконтракт»</span>
-                <router-link to="#" class="footer__bottom-link">Политика конфиденциальности</router-link>
-            </div>
-
-            <router-link to="#" class="footer__bottom-manager-link">Обратиться к менеджеру</router-link>
-
-            <span class="footer__bottom-text">
-                Разработка сайта — компания
-                <a href="" target="_blank" class="footer__bottom-link">«Факт»</a>
-            </span>
-        </div>
-        </div>
-    </footer>
-
-    <Teleport to="body">
-        <Transition name="feedback-fade">
-            <div
-                v-if="isFeedbackOpen"
-                class="feedback-modal"
-                @click.self="closeFeedback"
-            >
-                <div class="feedback-modal__window" role="dialog" aria-modal="true">
-                    <button
-                        class="feedback-modal__close"
-                        type="button"
-                        aria-label="Закрыть"
-                        @click="closeFeedback"
-                    >
-                        <closeIcon/>
-                    </button>
-
-                    <h3 class="feedback-modal__title">Обратная связь</h3>
-                    <p class="feedback-modal__subtitle">Оставьте заявку, и мы свяжемся с вами в ближайшее время</p>
-
-                    <form class="feedback-modal__form" novalidate @submit="onSubmit">
-
-                        <div class="feedback-modal__field">
-                            <input
-                                v-model="fullName"
-                                class="feedback-modal__input"
-                                :class="{ 'feedback-modal__input--error': errors.fullName }"
-                                type="text"
-                                name="fullName"
-                                placeholder="ФИО"
-                            />
-                            <span v-if="errors.fullName" class="feedback-modal__error">{{ errors.fullName }}</span>
-                        </div>
-                        <div class="feedback-modal__field">
-                            <input
-                                v-model="phone"
-                                class="feedback-modal__input"
-                                :class="{ 'feedback-modal__input--error': errors.phone }"
-                                type="tel"
-                                name="phone"
-                                placeholder="+7 (___) ___-__-__"
-                            />
-                            <span v-if="errors.phone" class="feedback-modal__error">{{ errors.phone }}</span>
-                        </div>
-
-                        <div class="feedback-modal__field">
-                            <input
-                                v-model="email"
-                                class="feedback-modal__input"
-                                :class="{ 'feedback-modal__input--error': errors.email }"
-                                type="email"
-                                name="email"
-                                placeholder="Email"
-                            />
-                            <span v-if="errors.email" class="feedback-modal__error">{{ errors.email }}</span>
-                        </div>
-
-                        <div class="feedback-modal__field">
-                            <div
-                                class="feedback-modal__dropzone"
-                                :class="{
-                                    'feedback-modal__dropzone--active': isDragOver,
-                                    'feedback-modal__dropzone--error': errors.file,
-                                    'feedback-modal__dropzone--filled': fileValue,
-                                }"
-                                @dragover.prevent="isDragOver = true"
-                                @dragleave.prevent="isDragOver = false"
-                                @drop.prevent="handleDrop"
-                                @click="fileInputRef.click()"
-                            >
-                                <input
-                                    ref="fileInputRef"
-                                    class="feedback-modal__file-input"
-                                    type="file"
-                                    name="file"
-                                    @change="handleFileChange"
-                                />
-
-                                <template v-if="!fileValue">
-                                    <span class="feedback-modal__dropzone-text">
-                                        Перетащите файл сюда или <span class="feedback-modal__dropzone-link">выберите</span>
-                                    </span>
-                                    <span class="feedback-modal__dropzone-hint">Один файл, до 5 МБ</span>
-                                </template>
-
-                                <template v-else>
-                                    <div class="feedback-modal__file-info">
-                                        
-                                        <div class="feedback-modal__file-meta">
-                                            <span class="feedback-modal__file-name">{{ fileValue.name }}</span>
-                                            <span class="feedback-modal__file-size">{{ formatFileSize(fileValue.size) }}</span>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            class="feedback-modal__file-remove"
-                                            aria-label="Удалить файл"
-                                            @click.stop="removeFile"
-                                        >
-                                        <closeIcon/>
-                                        </button>
-                                    </div>
-                                </template>
-                            </div>
-                            <span v-if="errors.file" class="feedback-modal__error">{{ errors.file }}</span>
-                        </div>
-
-                        <div class="feedback-modal__field">
-                            <label class="feedback-modal__checkbox-label">
-                                <input
-                                    v-model="agree"
-                                    type="checkbox"
-                                    name="agree"
-                                    class="feedback-modal__checkbox"
-                                    :class="{ 'feedback-modal__checkbox--error': errors.agree }"
-                                />
-                                <span class="feedback-modal__checkbox-text">
-                                    Согласен(-на) на обработку персональных данных
-                                </span>
-                            </label>
-                            <span v-if="errors.agree" class="feedback-modal__error">{{ errors.agree }}</span>
-                        </div>
-
-                        <button class="feedback-modal__submit" type="submit" :disabled="isSubmitting">
-                            {{ isSubmitting ? 'Отправка...' : 'Отправить' }}
+        <transition name="mobile-menu">
+            <div class="mobile-menu" v-if="isMobileMenuOpen">
+                <div class="header__mobile-bar mobile-menu__topbar">
+                    <div class="header__mobile-left">
+                        <button type="button" class="header__burger-btn" @click="closeMobileMenu" aria-label="Закрыть меню">
+                            <closeIcon class="mobile-menu__close-icon" />
                         </button>
 
-                        <p v-if="submitSuccess" class="feedback-modal__success">
-                            Заявка отправлена.
-                        </p>
-                    </form>
+                        <router-link to="#" class="header__mobile-logo" @click="closeMobileMenu">
+                            <logoHeaderMobile alt="logo-of-company" class="header__mobile-logo-icon"/>
+                        </router-link>
+                    </div>
+
+                    <div class="header__mobile-right">
+                        <button type="button" class="header__mobile-action-btn" @click="handleSearch" aria-label="Поиск">
+                            <searchIconMobile alt="" class="header__mobile-search-icon"/>
+                        </button>
+                        <button type="button" class="header__mobile-action-btn header__mobile-action-btn--bell" aria-label="Уведомления">
+                            <bellIcon alt="" class="header__mobile-bell-icon"/>
+                            <span v-if="hasNotifications" class="header__notification-dot"></span>
+                        </button>
+                        <button type="button" class="header__mobile-action-btn header__mobile-action-btn--cart" @click="handleBasketClick" aria-label="Корзина">
+                            <basketIconMobile alt="" class="header__mobile-basket-icon"/>
+                            <span v-if="cartCount" class="header__basket-count header__basket-count--mobile">{{ cartCount }}</span>
+                        </button>
+                        <button type="button" class="header__mobile-action-btn" @click="handleAuthClick" aria-label="Профиль">
+                            <userIcon alt="" class="header__mobile-user-icon"/>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mobile-menu__login">
+                    <p class="mobile-menu__login-text">Войти в личный кабинет</p>
+                    <button type="button" class="mobile-menu__login-btn" @click="handleAuthClick">Войти</button>
+                </div>
+
+                <div class="mobile-menu__tabs">
+                    <button
+                        type="button"
+                        class="mobile-menu__tab"
+                        :class="{ 'mobile-menu__tab--active': activeTab === 'catalog' }"
+                        @click="activeTab = 'catalog'"
+                    >
+                        <catalogIcon class="mobile-menu__tab-icon" alt=""/>
+                        Каталог
+                    </button>
+                    <button
+                        type="button"
+                        class="mobile-menu__tab"
+                        :class="{ 'mobile-menu__tab--active': activeTab === 'promo' }"
+                        @click="activeTab = 'promo'"
+                    >
+                        <promo class="mobile-menu__tab-icon" alt=""/>
+                        Акции
+                    </button>
+                </div>
+
+                <ul class="mobile-menu__list">
+                    <li v-for="(item, key) in mobileMenuItems" :key="key" class="mobile-menu__item">
+                        <router-link :to="item.path" @click="closeMobileMenu" class="mobile-menu__link">
+                            {{ item.title }}
+                            <arrowMoreInfo class="mobile-menu__chevron" />
+                        </router-link>
+                    </li>
+                </ul>
+
+                <div class="mobile-menu__footer">
+                    <div class="mobile-menu__footer-contacts">
+                        <a href="tel:+7-800-700-03-30" class="mobile-menu__footer-phone">8-800-700-03-30</a>
+                        <span class="mobile-menu__footer-note">Звонок бесплатный</span>
+                    </div>
+                    <div class="mobile-menu__footer-actions">
+                        <a href="tel:+7-800-700-03-30" class="mobile-menu__footer-action-btn" aria-label="Позвонить">
+                            <contactTelIcon/>
+                        </a>
+                        <a href="mailto:tsk@gmail.com" class="mobile-menu__footer-action-btn" aria-label="Написать письмо">
+                            <contactEmailIcon />
+                        </a>
+                    </div>
                 </div>
             </div>
-        </Transition>
-    </Teleport>
+        </transition>
+
+        <transition name="mobile-menu-backdrop">
+            <div v-if="isMobileMenuOpen" class="mobile-menu-backdrop" @click="closeMobileMenu"></div>
+        </transition>
+    </header>
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from 'vue'
-import { useForm, useField } from 'vee-validate'
-import * as yup from 'yup'
-import vkLogo from '@/assets/images/vk-logo.svg'
-import youtubeLogo from '@/assets/images/youtube-logo.svg'
-import odnoclassLogo from '@/assets/images/odnoclass-logo.svg'
+import { ref, watch, onBeforeUnmount } from 'vue'
+
+import burgerIcon from '@/assets/images/burger-icon.svg'
+import logoHeaderMobile from '@/assets/images/logo-header-mobile.svg'
+import bellIcon from '@/assets/images/bell-icon.svg'
+import userIcon from '@/assets/images/user-icon.svg'
+import basketIconMobile from '@/assets/images/basket-icon-mobile.svg'
+import searchIconMobile from '@/assets/images/search-icon-mobile.svg'
 import closeIcon from '@/assets/images/close-icon.svg'
-const linkColumns = [
-    {
-        title: 'service',
-        items: [
-            { title: 'Запчасти', path: '' },
-            { title: 'Доп. оборудование', path: '' },
-            { title: 'Расходные материалы', path: '' },
-            { title: 'Ручное оборудование и насосы', path: '' },
-            { title: 'Техника', path: '' },
-        ],
-    },
-    {
-        title: 'company',
-        items: [
-            { title: 'О компании', path: '' },
-            { title: 'Возвраты', path: '' },
-            { title: 'Филиалы', path: '' },
-            { title: 'Доставка', path: '' },
-            { title: 'Оплата', path: '' },
-            { title: 'Финансирование', path: '' },
-        ],
-    },
-    {
-        title: 'info',
-        items: [
-            { title: 'Новости', path: '' },
-            { title: 'Акции', path: '' },
-            { title: 'Контакты', path: '' },
-        ],
-    },
-]
-
-const mobileLinkColumns = [
-    [
-        { title: 'Каталог', path: '/catalog' },
-        { title: 'О компании', path: '' },
-        { title: 'Возвраты', path: '' },
-        { title: 'Филиалы', path: '' },
-        { title: 'Доставка', path: '' },
-    ],
-    [
-        { title: 'Оплата', path: '' },
-        { title: 'Финансирование', path: '' },
-        { title: 'Новости', path: '' },
-        { title: 'Акции', path: '' },
-        { title: 'Контакты', path: '' },
-    ],
-]
-
-const socialContacts = [
-    { title: '8-800-700-03-30', path: '' },
-    { title: '+7 (495) 662-66-23', path: '' },
-    { title: 'tsk@gmail.com', path: '' },
-]
-
-const socialMediaLinks = [
-    { title: 'VK', path: '', icon: vkLogo },
-    { title: 'Telegram', path: '', icon: youtubeLogo },
-    { title: 'WhatsApp', path: '', icon: odnoclassLogo },
-]
+import arrowMoreInfo from '@/assets/images/arrow-more-info.svg'
+import contactTelIcon from '@/assets/images/contact-tel-icon.svg'
+import contactEmailIcon from '@/assets/images/contact-email-icon.svg'
 
 
-const isFeedbackOpen = ref(false)
+import logoHeader from '@/assets/images/logo-header.svg'
+import promo from '@/assets/images/promo.svg'
+import searchIcon from '@/assets/images/search-icon.svg'
+import catalogIcon from '@/assets/images/catalog-icon.svg'
+import basketIcon from '@/assets/images/basket-icon.svg'
 
-function openFeedback() {
-    isFeedbackOpen.value = true
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', handleEsc)
+const isMobileMenuOpen = ref(false)
+const activeTab = ref('catalog')
+const searchQuery = ref('')
+
+const toggleMobileMenu = () => {
+    isMobileMenuOpen.value = !isMobileMenuOpen.value
 }
 
-function closeFeedback() {
-    isFeedbackOpen.value = false
-    document.body.style.overflow = ''
-    window.removeEventListener('keydown', handleEsc)
-    resetForm()
-    submitSuccess.value = false
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false
 }
 
-function handleEsc(e) {
-    if (e.key === 'Escape') closeFeedback()
-}
+const handleCatalogClick = () => {}
+const handleSearch = () => {}
+const handleBasketClick = () => {}
+const handleAuthClick = () => {}
 
-onBeforeUnmount(() => {
-    window.removeEventListener('keydown', handleEsc)
-    document.body.style.overflow = ''
+const navItems = [
+    {title:'О компании', path: '/about'},
+    {title:'Возвраты', path: '/returns'},
+    {title:'Филиалы', path: '/branches'},
+    {title:'Доставка', path: '/delivery'},
+    {title:'Оплата', path: '/payment'},
+    {title:'Финансирование', path: '/financing'},
+    {title:'Новости', path: '/news'},
+    {title:'Контакты', path: '/contacts'}
+]
+
+const mobileMenuItems = [
+    {title:'Личный кабинет', path: '/account'},
+    ...navItems
+]
+
+const cartCount = ref(12)
+const hasNotifications = ref(true)
+
+watch(isMobileMenuOpen, (isOpen) => {
+    document.body.style.overflow = isOpen ? 'hidden' : ''
 })
 
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024
-const phoneRegex = /^(?:\+7|8|7)[\s-]?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/
-
-const validationSchema = yup.object({
-    fullName: yup
-        .string()
-        .trim()
-        .required('Введите ФИО')
-        .min(2, 'Слишком короткое имя')
-        .matches(/^[а-яёА-ЯЁa-zA-Z\s-]+$/, 'Допустимы только буквы'),
-    phone: yup
-        .string()
-        .trim()
-        .required('Введите телефон')
-        .matches(phoneRegex, 'Формат: +7 (999) 999-99-99'),
-    email: yup
-        .string()
-        .trim()
-        .required('Введите email')
-        .email('Некорректный email'),
-    file: yup
-        .mixed()
-        .required('Прикрепите файл')
-        .test('fileSize', 'Файл больше 5 МБ', (value) => !value || value.size <= MAX_FILE_SIZE),
-    agree: yup
-        .boolean()
-        .oneOf([true], 'Необходимо согласие на обработку персональных данных'),
-})
-
-const { errors, handleSubmit, resetForm, isSubmitting, setFieldValue } = useForm({
-    validationSchema,
-    initialValues: {
-        fullName: '',
-        phone: '',
-        email: '',
-        file: null,
-        agree: false,
-    },
-})
-
-const { value: fullName } = useField('fullName')
-const { value: phone } = useField('phone')
-const { value: email } = useField('email')
-const { value: agree } = useField('agree')
-const { value: fileValue } = useField('file')
-
-
-const isDragOver = ref(false)
-const fileInputRef = ref(null)
-
-function setFile(file) {
-    if (!file) return
-    setFieldValue('file', file)
-}
-
-function handleFileChange(e) {
-    const file = e.target.files?.[0]
-    setFile(file)
-    e.target.value = ''
-}
-
-function handleDrop(e) {
-    isDragOver.value = false
-    const file = e.dataTransfer.files?.[0]
-    setFile(file)
-}
-
-function removeFile() {
-    setFieldValue('file', null)
-}
-
-function formatFileSize(bytes) {
-    if (bytes < 1024) return `${bytes} Б`
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} КБ`
-    return `${(bytes / (1024 * 1024)).toFixed(1)} МБ`
-}
-
-
-const submitSuccess = ref(false)
-
-const onSubmit = handleSubmit(async (values) => {
-    const formData = new FormData()
-    formData.append('fullName', values.fullName)
-    formData.append('phone', values.phone)
-    formData.append('email', values.email)
-    formData.append('file', values.file)
-    formData.append('agree', values.agree)
-
-
-    await fetch('', { method: 'POST', body: formData })
-    console.log('feedback submit', Object.fromEntries(formData))
-
-    submitSuccess.value = true
-    resetForm()
-    setTimeout(() => {
-        closeFeedback()
-    }, 1200)
-})
 </script>
 
 <style lang="scss" scoped>
-    .footer {
-        display: flex;
-        flex-direction: column;
-        height: 33rem;
-        justify-content: center;
-        align-items: center;
-        padding-left: 3rem;
-        padding-right: 3rem;
-        padding-top: 3rem;
-        background-color: $color-dark;
-        overflow-x: hidden;
-        @include respond-to('mobile') {
-            padding-left: 0;
-            padding-right: 0;
+.header {
+    border-bottom: 0.1rem solid $color-black;
+    margin: 1.7rem 0 0 0;
+    @include font(1.3rem, 1, 500);
+    @include respond-to('mobile') {
+            margin: 0;
+            border: none;
         }
 
-        &__container{
-            max-width: 1920px;
-            width:100%
+    &__mobile-bar {
+        display: none;
+        @include respond-to('mobile') {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             
         }
-        &__top {
-            display: flex;
-            width: 100%;
-            height: 55%;
-            box-sizing: border-box;
-        }
+    }
 
-        &__links {
-            display: flex;
-            height: 16.5rem;
-            max-height: 100%;
-            flex-direction: row;
-            gap: 16.2rem;
-            @include font(1.3rem, 1, 500, $color-white);
+    &__mobile-left {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
 
-            &--mobile {
-                display: none;
-            }
-        }
+    &__mobile-right {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        margin: 0 2rem 0 0;
+    }
 
-        &__nav-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            flex-wrap: nowrap;
-        }
+    &__burger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 6rem;
+        height: 6rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        &:active {
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+    }
+    }
 
-        &__nav-list--contacts {
-            display: grid;
-            grid-template-rows: repeat(2, auto);
-            grid-auto-flow: column;
-            column-gap: 5rem;
-            row-gap: 1.5rem;
-        }
+    &__burger-icon {
+        width: 1.8rem;
+        height: 1.4rem;
+    }
 
-        &__contacts {
-            display: flex;
-            flex-direction: row;
-            @include font(1.3rem, 1.15, 500, $color-white);
-            max-height: 100rem;
-        }
+    &__mobile-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
 
-        &__social-links {
-            margin-left: 21.5rem;
-            margin-right: 15.7rem;
-            width: 31.2rem;
-            max-width: 100%;
-        }
+    }
 
-        &__nav-link {
-            @include hover {
-                color: $color-primary;
-                transition: color 0.4s ease;
-            }
+    &__mobile-logo-icon {
+        display: block;
+        width: 4.9rem;
+        height: 3.4rem;
+        overflow: visible;
+        &:active {
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+    }
+    }
 
-            @include focus-visible;
-        }
+    &__mobile-action-btn {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        flex-shrink: 0;
+        color: $color-black;
+        &:active {
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+    }
+    }
 
-        &__nav-list--media {
-            display: flex;
-            flex-direction: row;
-            gap: 1.5rem;
-            margin-top: 6rem;
-            @include respond-to('mobile') {
-            gap:4.5rem;
-        }
+    &__mobile-basket-icon,
+    &__mobile-search-icon,
+    &__mobile-bell-icon,
+    &__mobile-user-icon {
+        display: block;
+        width: 2rem;
+        height: 2rem;
+        color: $color-black;
+    }
 
-            .footer__nav-item {
-                width: 4rem;
-                height: 4rem;
-                @include hover {
-                    transform: translateY(-0.2rem);
-                    transition: transform 0.4s ease;
-                }
-            }
+     
 
-            .footer__nav-link {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                background-color: rgba($color-white, 0.08);
-            }
-        }
+    &__notification-dot {
+        position: absolute;
+        top: -0.2rem;
+        right: -0.2rem;
+        width: 0.4rem;
+        height: 0.4rem;
+        border-radius: 50%;
+        background: #ff3b30;
+        border: 0.1rem solid $color-white;
+    }
 
-        &__feedback-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-            background-color: $color-primary;
-            border-radius: 0.6rem;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            @include font(1.3rem, 1, 500, $color-white);
-            @include hover {
-                transform: translateY(-0.2rem);
-                transition: transform 0.4s ease;
-            }
-
-            &--desktop {
-                height: 4rem;
-                width: 16rem;
-                flex-shrink: 0;
-            }
-
-            &--mobile {
-                display: none;
-                margin-bottom: 2.5rem;
-                width: 100%;
-            }
-        }
-
-        &__bottom {
-            display: flex;
-            align-items: end;
-            justify-content: space-between;
-
-            margin-top: 10rem;
-
-            padding-bottom: 2rem;
-            flex-wrap: nowrap;
-            box-sizing: border-box;
-            @include font(1.3rem, 1, 500, $color-white);
-        }
-
-        &__bottom-left {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        &__copyright {
-            @include font(1.3rem, 1.14, 500, $color-gray-light);
-        }
-
-        &__bottom-manager-link {
-            color: $color-white;
-            @include hover {
-                color: $color-primary;
-                transition: color 0.4s ease;
-            }
-
-            @include focus-visible;
-        }
-
-        &__bottom-link {
-            color: $color-white;
-            @include hover {
-                color: $color-primary;
-                transition: color 0.4s ease;
-            }
-
-            @include focus-visible;
-        }
+    &__top {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 1.7rem 1.8rem 1.7rem;
 
         @include respond-to('mobile') {
-            height: auto;
-
-            &__top {
-                flex-direction: column;
-                align-items: stretch;
-                height: auto;
-                margin-left: 0;
-                margin-right: 0;
-                gap: 2rem;
-            }
-
-            &__links {
-                display: none;
-                order: 1;
-                gap: 0;
-                padding-bottom: 2rem;
-                border-bottom: 0.1rem solid rgba($color-white, 0.1);
-
-                &--mobile {
-                    display: grid;
-                    grid-template-columns: repeat(2, max-content);
-                    column-gap: 9.4rem;
-                    height: auto;
-                }
-            }
-
-            &__nav-list {
-                gap: 1.6rem;
-            }
-
-            &__nav-item {
-                @include respond-to('mobile') {
-                height: auto;
-                margin-left: 2rem;
-            }
-            }
-
-            &__social-links {
-                display: contents;
-                margin: 0;
-                width: auto;
-            }
-
-            &__contacts {
-                order: 2;
-            }
-
-            &__nav-list--contacts {
-                column-gap: 5.6rem;
-                row-gap: 1.5rem;
-                margin-left: 0;
-            }
-
-            &__contacts-media {
-                order: 3;
-                display: flex;
-                flex-direction: column;
-            }
-
-            &__nav-list--media {
-                justify-content: center;
-                margin-top: 0;
-                padding-bottom: 3rem;
-                order: 2;
-                border-bottom: 0.1rem solid rgba($color-white, 0.1);
-
-            }
-
-            &__top-feedback {
-                display: none;
-            }
-
-            &__feedback-btn {
-                &--desktop {
-                    display: none;
-                }
-
-                &--mobile {
-                    display: flex;
-                    width: auto;
-                    order: 1;
-                    height: auto;
-                    padding: 1.25rem 1.25rem;
-                    margin-left: 2rem;
-                    margin-right: 2rem;
-                    
-                }
-            }
-
-            &__bottom {
-                flex-direction: column;
-                align-items: flex-start;
-                margin-top: 0;
-                margin-left: 1.6rem;
-                margin-right: 1.6rem;
-                padding-top: 2rem;
-                padding-bottom: 2.4rem;
-                gap: 1.5rem;
-                @include font(1.2rem, 1, 500, $color-white);
-                
-            }
-
-            &__bottom-manager-link {
-                order: 1;
-            }
-            &__copyright{
-                pointer-events: none;
-                @include font(1.2rem, 1, 500, $color-white);
-                
-            }
-           
-
-            &__bottom-left {
-                order: 2;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1.2rem;
-
-                .footer__copyright {
-                    order: 2;
-                }
-
-                .footer__bottom-link {
-                    order: 1;
-                }
-            }
-
-            &__bottom-text {
-                order: 3;
-                @include font(1.2rem, 1, 500, #C8C8D2);
-            }
-
-            &__bottom-link{
-                @include font(1.2rem, 1, 500, #C8C8D2);
-            }
+            display: none;
         }
     }
-</style>
 
-<style lang="scss">
-.feedback-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 2rem;
-    box-sizing: border-box;
-
-    &__window {
-        position: relative;
-        width: 100%;
-        max-width: 46rem;
-        max-height: 90vh;
-        overflow-y: auto;
-        background-color: $color-dark;
-        border-radius: 1.2rem;
-        padding: 4rem 3.2rem 3.2rem;
-        box-sizing: border-box;
-    }
-
-    &__close {
-        position: absolute;
-        top: 1.6rem;
-        right: 1.6rem;
-        width: 3.2rem;
-        height: 3.2rem;
+    &__nav-list {
         display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
         align-items: center;
         justify-content: center;
-        border: none;
-        background: rgba($color-white, 0.08);
-        border-radius: 50%;
-        color: $color-white;
         cursor: pointer;
-        transition: background-color 0.3s ease;
+    }
 
-        &:hover {
-            background-color: $color-primary;
+    &__nav-link {
+        color: inherit;
+        text-decoration: none;
+        
+
+        @include hover {
+            color: $color-primary;
+            transition: color 0.4s ease;
+
         }
+
+        @include focus-visible;
     }
 
-    &__title {
-        @include font(2.2rem, 1.2, 600, $color-white);
-        margin: 0 0 0.8rem;
-    }
-
-    &__subtitle {
-        @include font(1.4rem, 1.4, 400, $color-gray-light);
-        margin: 0 0 2.4rem;
-    }
-
-    &__form {
+    &__promo {
         display: flex;
-        flex-direction: column;
-        gap: 1.6rem;
-    }
-
-    &__field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-    }
-
-    &__input {
-        width: 100%;
-        box-sizing: border-box;
-        background-color: rgba($color-white, 0.06);
-        border: 0.1rem solid rgba($color-white, 0.12);
-        border-radius: 0.6rem;
-        padding: 1.2rem 1.4rem;
-        @include font(1.4rem, 1.2, 400, $color-white);
-        outline: none;
-        transition: border-color 0.3s ease;
-
-        &::placeholder {
-            color: $color-gray-light;
-        }
-
-        &:focus {
-            border-color: $color-primary;
-        }
-
-        &--error {
-            border-color: #e6584f;
-        }
-    }
-
-    &__error {
-        @include font(1.2rem, 1.3, 400, #e6584f);
-    }
-
-    &__dropzone {
-        position: relative;
-        display: flex;
-        flex-direction: column;
+        border: 0.1rem solid $color-very-gray-light;
+        border-style: none solid;
+        padding: 0 2.1rem 0 0;
         align-items: center;
         justify-content: center;
-        gap: 0.6rem;
-        min-height: 5rem;
-        border: 0.1rem dashed rgba($color-white, 0.24);
-        border-radius: 0.8rem;
-        padding: 1.6rem;
-        box-sizing: border-box;
-        cursor: pointer;
-        color: $color-gray-light;
-        transition: border-color 0.3s ease, background-color 0.3s ease;
+        margin: 0 0 0 2.5rem;
+       
 
-        &:hover {
-            border-color: $color-primary;
+        @include hover {
+            color: $color-primary;
+            border: $color-primary; 
+            transition: color 0.4s ease;
         }
 
-        &--active {
-            border-color: $color-primary;
-            background-color: rgba($color-primary, 0.08);
-        }
-
-        &--error {
-            border-color: #e6584f;
-        }
-
-        &--filled {
-            cursor: default;
-            align-items: stretch;
-            justify-content: center;
-            padding: 1.2rem 1.4rem;
-        }
+        @include focus-visible;
     }
 
-    &__file-input {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    &__dropzone-icon {
-        color: $color-gray-light;
-    }
-
-    &__dropzone-text {
-        @include font(1.3rem, 1.3, 400, $color-gray-light);
-        text-align: center;
-    }
-
-    &__dropzone-link {
-        color: $color-primary;
-        text-decoration: underline;
-    }
-
-    &__dropzone-hint {
-        @include font(1.1rem, 1, 400, rgba($color-gray-light, 0.7));
-    }
-
-    &__file-info {
-        display: flex;
-        align-items: center;
-        gap: 1.2rem;
-        color: $color-white;
-    }
-
-    &__file-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
-        min-width: 0;
-        flex: 1;
-    }
-
-    &__file-name {
-        @include font(1.3rem, 1.2, 500, $color-white);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    &__file-size {
-        @include font(1.1rem, 1, 400, $color-gray-light);
-    }
-
-    &__file-remove {
+    &__promo-icon {
+        display: block; 
+        width: 1.2rem;
+        height: 1.2rem;
         flex-shrink: 0;
-        width: 2.6rem;
-        height: 2.6rem;
+        padding: 0.15rem;
+        margin: 0 0.5rem 0 2.3rem;
+    }
+
+    &__contacts {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    &__contacts-phone,
+    &__contacts-email {
+        color: inherit;
+        text-decoration: none;
+        
+
+        @include hover {
+            color: $color-primary;
+            transition: color 0.4s ease;
+        }
+
+        @include focus-visible;
+    }
+
+    &__bottom {
         display: flex;
         align-items: center;
-        justify-content: center;
-        border: none;
-        border-radius: 50%;
-        background: rgba($color-white, 0.08);
-        color: $color-white;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+        padding: 0 0 1.4rem 0;
+        margin: 0 1.7rem 0 1.7rem;
 
-        &:hover {
-            background-color: #e6584f;
+        @include respond-to('mobile') {
+            display: none;
         }
     }
 
-
-    &__checkbox-label {
+    &__us-interaction {
         display: flex;
-        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+    }
+
+    &__toolbar {
+        display: flex;
+        margin: 0 0 0 2.1rem;
         gap: 1rem;
-        cursor: pointer;
+        align-items: center;
     }
 
-    &__checkbox {
-        flex-shrink: 0;
-        width: 1.8rem;
-        height: 1.8rem;
-        margin-top: 0.1rem;
-        accent-color: $color-primary;
-        cursor: pointer;
-
-        &--error {
-            outline: 0.1rem solid #e6584f;
-            outline-offset: 0.2rem;
+    &__logo {
+        width: 28.7rem;
+        height: 3.8rem;
+        max-width: 100%;
+        @include hover{
+            transform: translateY(-0.2rem);
+            transition: transform 0.4s ease;
         }
     }
 
-    &__checkbox-text {
-        @include font(1.3rem, 1.4, 400, $color-gray-light);
-    }
-
-    &__submit {
-        margin-top: 0.8rem;
-        height: 4.4rem;
+    &__catalog-btn {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        max-height: 4rem;
+        height: fit-content;
+        padding: 1.2rem 2.4rem;
+        gap: 0.8rem;
         border: none;
         border-radius: 0.6rem;
         background-color: $color-primary;
-        cursor: pointer;
-        @include font(1.4rem, 1, 600, $color-white);
-        transition: transform 0.3s ease, opacity 0.3s ease;
-
-        &:hover {
-            transform: translateY(-0.2rem);
-        }
-
-        &:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
+        color: $color-white;
+        @include font(1.3rem, 1, 700);
+        @include hover {
+            background: rgba($color-primary, 0.7);
+            color: $color-dark;
+            transition: color 0.4s ease, background 0.4s ease;
+            
+            
         }
     }
-
-    &__success {
-        margin: 0;
-        text-align: center;
-        @include font(1.3rem, 1.3, 500, #4caf50);
+ 
+    &__catalog-icon {
+        width: 1.6rem;
+        height: 1.6rem;
     }
 
-    @include respond-to('mobile') {
-        padding: 0;
-        align-items: flex-end;
+    &__search {
+        display: flex;
+        max-height: 100%;
+        position: relative;
 
-        &__window {
-            max-width: 100%;
-            max-height: 92vh;
-            max-height: 92dvh;
-            border-radius: 1.2rem 1.2rem 0 0;
-            padding: 2.4rem 1.6rem 1.6rem;
-        }
-
-        &__close {
-            top: 1.2rem;
-            right: 1.2rem;
-            width: 2.8rem;
-            height: 2.8rem;
-        }
-
-        &__title {
-            @include font(1.8rem, 1.2, 600, $color-white);
-            margin: 0 0 0.4rem;
-        }
-
-        &__subtitle {
-            @include font(1.2rem, 1.3, 400, $color-gray-light);
-            margin: 0 0 1.6rem;
-        }
-
-        &__form {
-            gap: 1rem;
-        }
-
-        &__field {
-            gap: 0.4rem;
-        }
-
-        &__input {
-            padding: 1rem 1.2rem;
-            @include font(1.3rem, 1.2, 400, $color-white);
-        }
-
-        &__error {
-            @include font(1.1rem, 1.2, 400, #e6584f);
-        }
-
-        &__dropzone {
-            min-height: 4rem;
-            padding: 1.2rem;
-            gap: 0.4rem;
-
-            &--filled {
-                padding: 1rem 1.2rem;
+        @include hover {
+            .header__search-icon {
+                color: $color-primary;
+                transition: color 0.4s ease;
             }
         }
+    }
 
-        &__dropzone-text {
-            @include font(1.2rem, 1.2, 400, $color-gray-light);
+    &__search-input {
+        display: flex;
+        padding: 1.15rem 1.5rem;
+        width: 26.2rem;
+        max-width: 100%;
+        max-height: 4rem;
+        height: fit-content;
+        border-radius: 0.6rem;
+        border: 0.1rem solid $color-very-gray-light;
+
+        &::placeholder {
+            color: $color-gray;
+            transition: color 0.4s ease;
         }
 
-        &__dropzone-hint {
-            @include font(1rem, 1, 400, rgba($color-gray-light, 0.7));
+        @include hover {
+            border-color: $color-primary;
+
+            &::placeholder {
+                color: $color-primary;
+            }
+        };
+
+        @include focus-visible;
+    }
+
+    &__search-icon {
+        position: absolute;
+        width: 1.6rem;
+        height: 1.6rem;
+        right: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: $color-gray;
+        transition: color 0.4s ease;
+    }
+
+    &__user-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        justify-content: center;
+        @include font(1.3rem, 1, 700);
+    }
+
+    &__basket-btn {
+        display: flex;
+        width: 13.8rem;
+        max-height: 4rem;
+        padding: 1rem;
+        height: fit-content;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+        transition: background 0.2s ease;
+        @include button-primary-interactive;
+    }
+
+    &__basket-icon {
+        display: flex;
+        margin: 0 0.4rem 0 0;
+        width: 1.6rem;
+        height: 1.6rem;
+    }   
+
+    &__basket-count {
+        display: flex;    
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: $color-primary;
+        color: $color-white;
+        border-radius: 0.25rem;
+        @include font(1.1rem, 1, 700);
+        width: 2.7rem;
+        height: 1.8rem;
+
+        &--mobile {
+            position: absolute;
+            top: -0.2rem;
+            right: -0.9rem;
+            width: 1.8rem;
+            height: 1.1rem;
+            border-radius: 0.4rem;
+            border: 0.1rem solid $color-white;
+            @include font(0.7rem, 1, 700);
+            white-space: nowrap;
+        }
+    }
+
+    &__authorization-btn {
+        display: flex;
+        max-width: 10rem;
+        max-height: 4rem;
+        padding: 1.25rem 3rem;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        border: 0.2rem solid $color-primary;
+        border-radius: 0.6rem;
+        transition: background 0.2s ease;
+        @include button-primary-interactive;
+    }
+}
+
+
+.mobile-menu-backdrop {
+    display: none;
+
+    @include respond-to('mobile') {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        background: rgba($color-black, 0.4);
+    }
+}
+
+.mobile-menu {
+    display: none;
+
+    @include respond-to('mobile') {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        width: 100%;
+        height: 100dvh;
+        background: $color-white;
+        overflow-y: auto;
+        color: $color-black;
+        @include font(1.3rem, 1, 500);
+    }
+
+
+    &__topbar {
+        display: flex;
+        border-bottom: 0.1rem solid $color-very-gray-light;
+        flex-shrink: 0;
+    }
+
+    &__close-icon {
+        width: 2rem;
+        height: 2rem;
+        color: $color-black;
+        
+    }
+
+    &__login {
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+        padding: 2.5rem 2rem;
+        background: $color-very-gray-light;
+        flex-shrink: 0;
+    }
+
+    &__login-text {
+        @include font(1.8rem, 1, 600, $color-black);
+    }
+
+    &__login-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 4rem;
+        border: none;
+        border-radius: 0.6rem;
+        background-color: $color-primary;
+        color: $color-white;
+        cursor: pointer;
+        @include font(1.3rem, 1, 700);
+        @include hover {
+            background: rgba($color-primary, 0.7);
+            transition: color 0.4s ease;
+        }
+    }
+
+    &__tab:first-of-type{
+        border-right: 0.1rem solid $color-very-gray-light;
+    }
+    &__tabs {
+        display: flex;
+        height: 5.6rem;
+        padding: 1rem 0 1rem 0;
+        flex-shrink: 0;
+        border-bottom: 0.1rem solid $color-very-gray-light;
+    }
+
+    &__tab {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        padding: 0.6rem 0;
+        border: none;
+        border-bottom: 0.2rem solid transparent;
+        background: none;
+        color: $color-gray;
+        cursor: pointer;
+        @include font(1.5rem, 1, 600, $color-dark);
+
+        &--active {
+            color: $color-primary;
+        }
+    }
+
+    &__tab-icon {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 0 2rem 0 2rem;
+    }
+
+    &__item {
+        border-bottom: 0.1rem solid $color-very-gray-light;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.8rem 0;
+        color: $color-black;
+        text-decoration: none;
+        @include font(1.5rem, 1, 500, $color-dark);
+
+        @include hover {
+            color: $color-primary;
+            transition: color 0.4s ease;
+        }
+    }
+
+    &__chevron {
+        width: 2rem;
+        height: 2rem;
+        color: $color-gray;
+        flex-shrink: 0;
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.6rem;
+        background: $color-very-gray-light;
+        flex-shrink: 0;
+    }
+
+    &__footer-contacts {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    &__footer-phone {
+        color: $color-black;
+        text-decoration: none;
+        @include font(1.5rem, 1, 600);
+
+        @include hover {
+            color: $color-primary;
+            transition: color 0.4s ease;
+        }
+    }
+
+    &__footer-note {
+        @include font(1.2rem, 1, 500, $color-gray-light);
+    }
+
+    &__footer-actions {
+        display: flex;
+        gap: 1rem;
+        flex-shrink: 0;
+    }
+
+    &__footer-action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3.3rem;
+        height: 3.3rem;
+        color: $color-primary;
+        flex-shrink: 0;
+
+        svg {
+            width:100%;
+            height:100%
         }
 
-        &__file-name {
-            @include font(1.2rem, 1.2, 500, $color-white);
-        }
-
-        &__file-remove {
-            width: 2.2rem;
-            height: 2.2rem;
-        }
-
-        &__checkbox-text {
-            @include font(1.2rem, 1.3, 400, $color-gray-light);
-        }
-
-        &__submit {
-            height: 4rem;
-            margin-top: 0.4rem;
-            @include font(1.3rem, 1, 600, $color-white);
+        @include hover {
+            background-color: $color-primary;
+            color: $color-white;
+            transition: color 0.4s ease;
         }
     }
 }
 
-.feedback-fade-enter-active,
-.feedback-fade-leave-active {
-    transition: opacity 0.25s ease;
+
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+    transition: transform 0.3s ease;
 }
-.feedback-fade-enter-from,
-.feedback-fade-leave-to {
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+    transform: translateX(-100%);
+}
+
+.mobile-menu-backdrop-enter-active,
+.mobile-menu-backdrop-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-backdrop-enter-from,
+.mobile-menu-backdrop-leave-to {
     opacity: 0;
 }
 </style>
