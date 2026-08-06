@@ -180,9 +180,9 @@ const newsItems = [
         overflow: visible;
         cursor: pointer;
         flex-shrink: 0;
+        transition: color 0.4s ease;
         @include hover {
             color: rgba($color-primary, 1);
-            transition: color 0.4s ease;
         }
         &:disabled {
             opacity: 0.4;
@@ -218,10 +218,10 @@ const newsItems = [
     max-height: 100%;
     margin-bottom: 8rem;
     flex-shrink: 0;
+    transition: transform 0.4s ease;
     
     @include hover {
             transform: translateY(-0.2rem);
-            transition: transform 0.4s ease;
             background: $color-very-gray-light;
             border-radius: 0.6rem;
         }
@@ -276,6 +276,7 @@ const newsItems = [
         @include font(1.5rem, 1, 600, $color-dark);
         opacity: 0.3;
         flex-shrink: 0;
+        padding-left: 0.8rem;
     }
 }
 </style>
