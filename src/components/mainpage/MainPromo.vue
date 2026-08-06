@@ -20,7 +20,7 @@
                         :src="item.image"
                         :alt="item.title"
                         class="promo-info__img"
-                        loading="lazy"
+                        loading="eager"
                     >
                     <div class="promo-info__content">
                         <h3 class="promo-info__title">{{ item.title }}</h3>
